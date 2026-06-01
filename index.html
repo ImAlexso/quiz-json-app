@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulador de preguntas JSON</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #64748b;
+      --border: #d7dee8;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --primary-soft: #eff6ff;
+      --ok: #047857;
+      --ok-bg: #d1fae5;
+      --bad: #b91c1c;
+      --bad-bg: #fee2e2;
+      --warn: #92400e;
+      --warn-bg: #fef3c7;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    .app {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 28px 18px 48px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 22px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 4vw, 2.45rem);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.98rem;
+      max-width: 680px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .sidebar h2,
+    .main-card h2,
+    .editor h2 {
+      margin: 0 0 12px;
+      font-size: 1.08rem;
+    }
+
+    label {
+      font-weight: 750;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    select,
+    textarea,
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font: inherit;
+      background: white;
+      color: var(--text);
+    }
+
+    textarea {
+      min-height: 280px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.86rem;
+      line-height: 1.45;
+    }
+
+    select:focus,
+    textarea:focus,
+    input[type="text"]:focus {
+      outline: 3px solid rgba(37, 99, 235, 0.15);
+      border-color: var(--primary);
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .small {
+      font-size: 0.84rem;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 999px;
+      background: #e5e7eb;
+      color: #111827;
+      padding: 10px 14px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.08s ease, background 0.15s ease, color 0.15s ease;
+      font: inherit;
+      font-size: 0.92rem;
+      min-height: 42px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: #d1d5db;
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn.primary:hover {
+      background: var(--primary-dark);
+    }
+
+    .btn.danger {
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .file-zone {
+      border: 1px dashed #94a3b8;
+      border-radius: 16px;
+      padding: 14px;
+      background: #f8fafc;
+      margin: 12px 0;
+    }
+
+    .file-zone input {
+      width: 100%;
+    }
+
+    .status-box {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      font-weight: 650;
+      display: none;
+    }
+
+    .status-box.ok {
+      display: block;
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .status-box.bad {
+      display: block;
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .exam-meta {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-weight: 800;
+      font-size: 0.82rem;
+      width: fit-content;
+    }
+
+    .progress-wrap {
+      margin-top: 14px;
+    }
+
+    .progress-bar {
+      height: 10px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.2s ease;
+    }
+
+    .question-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .q-dot {
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 10px;
+      padding: 8px 0;
+      font-weight: 850;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .q-dot.current {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .q-dot.answered {
+      background: #dbeafe;
+      border-color: #93c5fd;
+    }
+
+    .q-dot.correct {
+      background: var(--ok-bg);
+      color: var(--ok);
+      border-color: #86efac;
+    }
+
+    .q-dot.incorrect {
+      background: var(--bad-bg);
+      color: var(--bad);
+      border-color: #fecaca;
+    }
+
+    .q-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .question-title {
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .question-topic {
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .question-text {
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 1rem;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 14px;
+      border-radius: 14px;
+      margin-bottom: 16px;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: start;
+      text-align: left;
+      border: 1px solid var(--border);
+      background: white;
+      border-radius: 16px;
+      padding: 12px;
+      cursor: pointer;
+      font: inherit;
+      color: var(--text);
+    }
+
+    .option:hover {
+      border-color: var(--primary);
+      background: #f8fbff;
+    }
+
+    .option.selected {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+    }
+
+    .option.correct {
+      border-color: #86efac;
+      background: var(--ok-bg);
+    }
+
+    .option.incorrect {
+      border-color: #fecaca;
+      background: var(--bad-bg);
+    }
+
+    .letter {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #e5e7eb;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #111827;
+    }
+
+    .option.selected .letter {
+      background: var(--primary);
+      color: white;
+    }
+
+    .option.correct .letter {
+      background: var(--ok);
+      color: white;
+    }
+
+    .option.incorrect .letter {
+      background: var(--bad);
+      color: white;
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .navigation .right-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .result-box {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: #f8fafc;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.4rem;
+    }
+
+    .review-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .review-item {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .review-item.bad {
+      border-color: #fecaca;
+      background: #fff7f7;
+    }
+
+    .review-item.ok {
+      border-color: #86efac;
+      background: #f0fdf4;
+    }
+
+    .review-item.pending {
+      border-color: #fde68a;
+      background: #fffbeb;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .editor {
+      margin-bottom: 18px;
+      display: none;
+    }
+
+    .editor.visible {
+      display: block;
+    }
+
+    .footer-note {
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 14px;
+      background: var(--warn-bg);
+      color: var(--warn);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 850px) {
+      header {
+        flex-direction: column;
+      }
+
+      .top-actions {
+        justify-content: flex-start;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        order: 2;
+      }
+
+      .main-card {
+        order: 1;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .app {
+        padding: 18px 12px 32px;
+      }
+
+      .result-box {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .question-grid {
+        grid-template-columns: repeat(6, 1fr);
+      }
+
+      .q-header {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .navigation,
+      .navigation .right-actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Simulador de preguntas JSON</h1>
+        <div class="subtitle">Carga un banco de preguntas, responde desde el móvil o el ordenador y revisa tus fallos al final.</div>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="toggleEditorBtn">Editar JSON</button>
+        <button class="btn ghost" id="exportProgressBtn">Exportar progreso</button>
+        <button class="btn danger" id="resetBtn">Reiniciar</button>
+      </div>
+    </header>
+
+    <section class="card editor" id="editorPanel">
+      <h2>Editor del banco de preguntas</h2>
+      <p class="muted">Puedes pegar aquí el JSON completo. Sirven preguntas de opción múltiple y de sí/no.</p>
+      <textarea id="jsonEditor"></textarea>
+      <div class="navigation">
+        <button class="btn primary" id="saveJsonBtn">Guardar JSON</button>
+        <button class="btn" id="restoreSampleBtn">Restaurar ejemplo</button>
+      </div>
+      <div class="footer-note">Formato: <strong>pregunta</strong>, <strong>tipo</strong>, <strong>opciones</strong> si es múltiple, <strong>respuesta</strong> y opcionalmente <strong>explicacion</strong>.</div>
+    </section>
+
+    <main class="layout">
+      <aside class="card sidebar">
+        <h2>Banco</h2>
+
+        <label for="fileInput">Cargar JSON</label>
+        <div class="file-zone">
+          <input type="file" id="fileInput" accept="application/json,.json" />
+        </div>
+        <div class="status-box" id="loadStatus"></div>
+
+        <div class="exam-meta">
+          <span class="pill" id="bankPill">Banco actual</span>
+          <div class="muted" id="bankDescription">Usando banco de ejemplo.</div>
+          <button class="btn primary" id="startBtn">Empezar / mezclar preguntas</button>
+          <button class="btn" id="downloadSampleBtn">Descargar ejemplo</button>
+        </div>
+
+        <div class="progress-wrap">
+          <div class="muted small" id="progressText">0/0 respondidas</div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+
+        <div class="question-grid" id="questionGrid"></div>
+      </aside>
+
+      <section class="card main-card">
+        <div id="quizView">
+          <div class="q-header">
+            <div>
+              <div class="question-title" id="questionTitle">Pregunta</div>
+              <div class="question-topic" id="questionTopic"></div>
+            </div>
+            <button class="btn" id="clearAnswerBtn">Dejar en blanco</button>
+          </div>
+
+          <div class="question-text" id="questionText"></div>
+          <div class="options" id="optionsContainer"></div>
+
+          <div class="navigation">
+            <button class="btn" id="prevBtn">Anterior</button>
+            <div class="right-actions">
+              <button class="btn" id="nextBtn">Siguiente</button>
+              <button class="btn primary" id="finishBtn">Corregir</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="resultView" class="hidden">
+          <h2>Resultado</h2>
+          <p class="muted" id="resultSubtitle"></p>
+
+          <div class="result-box">
+            <div class="stat">
+              <span class="muted small">Correctas</span>
+              <strong id="statCorrect">0</strong>
+            </div>
+            <div class="stat">
+              <span class="muted small">Incorrectas</span>
+              <strong id="statWrong">0</strong>
+            </div>
+            <div class="stat">
+              <span class="muted small">En blanco</span>
+              <strong id="statBlank">0</strong>
+            </div>
+            <div class="stat">
+              <span class="muted small">Porcentaje</span>
+              <strong id="statScore">0%</strong>
+            </div>
+          </div>
+
+          <div class="navigation">
+            <button class="btn" id="backToQuizBtn">Volver al test</button>
+            <button class="btn primary" id="retryWrongBtn">Rehacer falladas</button>
+          </div>
+
+          <div class="review-list" id="reviewList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "quiz_json_mobile_data_v1";
+    const PROGRESS_KEY = "quiz_json_mobile_progress_v1";
+
+    const sampleQuestions = [
+      {
+        pregunta: "¿Qué comando muestra la versión de Python instalada?",
+        tipo: "multiple",
+        opciones: [
+          "python --version",
+          "python install",
+          "python start",
+          "python list"
+        ],
+        respuesta: "python --version",
+        explicacion: "El comando correcto es python --version. En algunos sistemas también puede usarse python3 --version."
+      },
+      {
+        pregunta: "¿JSON sirve para guardar datos estructurados?",
+        tipo: "si_no",
+        respuesta: "Sí",
+        explicacion: "Sí. JSON permite representar objetos, listas y pares clave-valor."
+      },
+      {
+        pregunta: "¿Cuál de estos formatos se usa normalmente para datos estructurados?",
+        tipo: "multiple",
+        opciones: ["JSON", "MP3", "PNG", "EXE"],
+        respuesta: "JSON",
+        explicacion: "JSON es uno de los formatos más usados para intercambiar y almacenar datos estructurados."
+      }
+    ];
+
+    let questions = loadQuestions();
+    let progress = loadProgress();
+    let order = questions.map((_, index) => index);
+    let currentIndex = 0;
+    let resultMode = false;
+    let filteredIndexes = null;
+
+    const fileInput = document.getElementById("fileInput");
+    const loadStatus = document.getElementById("loadStatus");
+    const bankPill = document.getElementById("bankPill");
+    const bankDescription = document.getElementById("bankDescription");
+    const startBtn = document.getElementById("startBtn");
+    const downloadSampleBtn = document.getElementById("downloadSampleBtn");
+    const progressText = document.getElementById("progressText");
+    const progressFill = document.getElementById("progressFill");
+    const questionGrid = document.getElementById("questionGrid");
+    const questionTitle = document.getElementById("questionTitle");
+    const questionTopic = document.getElementById("questionTopic");
+    const questionText = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const finishBtn = document.getElementById("finishBtn");
+    const clearAnswerBtn = document.getElementById("clearAnswerBtn");
+    const quizView = document.getElementById("quizView");
+    const resultView = document.getElementById("resultView");
+    const resultSubtitle = document.getElementById("resultSubtitle");
+    const statCorrect = document.getElementById("statCorrect");
+    const statWrong = document.getElementById("statWrong");
+    const statBlank = document.getElementById("statBlank");
+    const statScore = document.getElementById("statScore");
+    const reviewList = document.getElementById("reviewList");
+    const backToQuizBtn = document.getElementById("backToQuizBtn");
+    const retryWrongBtn = document.getElementById("retryWrongBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const toggleEditorBtn = document.getElementById("toggleEditorBtn");
+    const exportProgressBtn = document.getElementById("exportProgressBtn");
+    const editorPanel = document.getElementById("editorPanel");
+    const jsonEditor = document.getElementById("jsonEditor");
+    const saveJsonBtn = document.getElementById("saveJsonBtn");
+    const restoreSampleBtn = document.getElementById("restoreSampleBtn");
+
+    function loadQuestions() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return structuredClone(sampleQuestions);
+        const parsed = JSON.parse(raw);
+        validateQuestions(parsed);
+        return parsed;
+      } catch {
+        return structuredClone(sampleQuestions);
+      }
+    }
+
+    function saveQuestions() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(questions));
+    }
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(PROGRESS_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveProgress() {
+      localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
+    }
+
+    function validateQuestions(list) {
+      if (!Array.isArray(list)) throw new Error("El JSON debe ser una lista de preguntas.");
+      if (list.length === 0) throw new Error("El banco de preguntas está vacío.");
+
+      list.forEach((q, index) => {
+        const n = index + 1;
+
+        if (!q || typeof q !== "object") throw new Error(`La pregunta ${n} no tiene formato válido.`);
+        if (!q.pregunta) throw new Error(`La pregunta ${n} no tiene el campo 'pregunta'.`);
+        if (!q.tipo) throw new Error(`La pregunta ${n} no tiene el campo 'tipo'.`);
+        if (!q.respuesta) throw new Error(`La pregunta ${n} no tiene el campo 'respuesta'.`);
+        if (!["multiple", "si_no"].includes(q.tipo)) throw new Error(`La pregunta ${n} debe ser de tipo 'multiple' o 'si_no'.`);
+
+        if (q.tipo === "multiple") {
+          if (!Array.isArray(q.opciones) || q.opciones.length < 2) {
+            throw new Error(`La pregunta ${n} debe tener al menos dos opciones.`);
+          }
+
+          if (!q.opciones.includes(q.respuesta)) {
+            throw new Error(`La respuesta de la pregunta ${n} no está dentro de sus opciones.`);
+          }
+        }
+
+        if (q.tipo === "si_no") {
+          const answer = normalizeAnswer(q.respuesta);
+          if (!["Sí", "No"].includes(answer)) {
+            throw new Error(`La respuesta de la pregunta ${n} debe ser 'Sí' o 'No'.`);
+          }
+        }
+      });
+    }
+
+    function normalizeAnswer(value) {
+      return value === "Si" ? "Sí" : value;
+    }
+
+    function getVisibleIndexes() {
+      return filteredIndexes || order;
+    }
+
+    function getQuestionByVisibleIndex(visibleIndex) {
+      const realIndex = getVisibleIndexes()[visibleIndex];
+      return questions[realIndex];
+    }
+
+    function getQuestionId(realIndex) {
+      return `q_${realIndex}`;
+    }
+
+    function getOptions(question) {
+      if (question.tipo === "si_no") return ["Sí", "No"];
+      return question.opciones;
+    }
+
+    function shuffleArray(array) {
+      const copy = array.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function startQuiz() {
+      order = shuffleArray(questions.map((_, index) => index));
+      filteredIndexes = null;
+      currentIndex = 0;
+      resultMode = false;
+      showQuiz();
+      render();
+    }
+
+    function render() {
+      const visibleIndexes = getVisibleIndexes();
+
+      if (!questions.length || !visibleIndexes.length) {
+        questionTitle.textContent = "Sin preguntas";
+        questionTopic.textContent = "";
+        questionText.textContent = "Carga un JSON válido para empezar.";
+        optionsContainer.innerHTML = "";
+        questionGrid.innerHTML = "";
+        progressText.textContent = "0/0 respondidas";
+        progressFill.style.width = "0%";
+        return;
+      }
+
+      if (currentIndex >= visibleIndexes.length) currentIndex = visibleIndexes.length - 1;
+      if (currentIndex < 0) currentIndex = 0;
+
+      bankPill.textContent = `${questions.length} preguntas`;
+      bankDescription.textContent = filteredIndexes ? "Modo repaso de falladas/en blanco." : "Banco cargado y listo para practicar.";
+
+      renderProgress();
+      renderQuestionGrid();
+
+      if (resultMode) renderResults();
+      else renderQuestion();
+    }
+
+    function renderProgress() {
+      const visibleIndexes = getVisibleIndexes();
+      const answered = visibleIndexes.filter(realIndex => progress[getQuestionId(realIndex)]).length;
+      const total = visibleIndexes.length;
+      const percent = total === 0 ? 0 : Math.round((answered / total) * 100);
+
+      progressText.textContent = `${answered}/${total} respondidas`;
+      progressFill.style.width = `${percent}%`;
+    }
+
+    function renderQuestionGrid() {
+      const visibleIndexes = getVisibleIndexes();
+      const result = calculateResult();
+      const resultByIndex = Object.fromEntries(result.details.map(item => [item.realIndex, item]));
+      questionGrid.innerHTML = "";
+
+      visibleIndexes.forEach((realIndex, visibleIndex) => {
+        const btn = document.createElement("button");
+        btn.className = "q-dot";
+        btn.textContent = visibleIndex + 1;
+
+        if (visibleIndex === currentIndex && !resultMode) btn.classList.add("current");
+        if (progress[getQuestionId(realIndex)]) btn.classList.add("answered");
+
+        if (resultMode) {
+          const item = resultByIndex[realIndex];
+          if (item?.status === "correct") btn.classList.add("correct");
+          if (item?.status === "wrong") btn.classList.add("incorrect");
+        }
+
+        btn.addEventListener("click", () => {
+          currentIndex = visibleIndex;
+          resultMode = false;
+          showQuiz();
+          render();
+        });
+
+        questionGrid.appendChild(btn);
+      });
+    }
+
+    function renderQuestion() {
+      const visibleIndexes = getVisibleIndexes();
+      const realIndex = visibleIndexes[currentIndex];
+      const question = questions[realIndex];
+      const questionId = getQuestionId(realIndex);
+      const selected = progress[questionId];
+      const options = getOptions(question);
+
+      questionTitle.textContent = `Pregunta ${currentIndex + 1}`;
+      questionTopic.textContent = question.tipo === "si_no" ? "Sí / No" : "Opción múltiple";
+      questionText.textContent = question.pregunta;
+      optionsContainer.innerHTML = "";
+
+      options.forEach((option, optionIndex) => {
+        const letter = question.tipo === "si_no" ? (optionIndex === 0 ? "S" : "N") : String.fromCharCode(65 + optionIndex);
+        const btn = document.createElement("button");
+        btn.className = "option";
+        if (selected === option) btn.classList.add("selected");
+
+        btn.innerHTML = `
+          <span class="letter">${letter}</span>
+          <span>${escapeHtml(option)}</span>
+        `;
+
+        btn.addEventListener("click", () => {
+          progress[questionId] = option;
+          saveProgress();
+          render();
+        });
+
+        optionsContainer.appendChild(btn);
+      });
+
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === visibleIndexes.length - 1;
+    }
+
+    function calculateResult() {
+      const visibleIndexes = getVisibleIndexes();
+      let correct = 0;
+      let wrong = 0;
+      let blank = 0;
+
+      const details = visibleIndexes.map((realIndex, visibleIndex) => {
+        const q = questions[realIndex];
+        const questionId = getQuestionId(realIndex);
+        const answer = progress[questionId] || null;
+        const correctAnswer = normalizeAnswer(q.respuesta);
+
+        if (!answer) {
+          blank++;
+          return { realIndex, visibleIndex, question: q, answer, status: "blank" };
+        }
+
+        if (normalizeAnswer(answer) === correctAnswer) {
+          correct++;
+          return { realIndex, visibleIndex, question: q, answer, status: "correct" };
+        }
+
+        wrong++;
+        return { realIndex, visibleIndex, question: q, answer, status: "wrong" };
+      });
+
+      const total = visibleIndexes.length;
+      const percentage = total === 0 ? 0 : Math.round((correct / total) * 10000) / 100;
+
+      return { correct, wrong, blank, total, percentage, details };
+    }
+
+    function renderResults() {
+      showResults();
+
+      const result = calculateResult();
+      statCorrect.textContent = result.correct;
+      statWrong.textContent = result.wrong;
+      statBlank.textContent = result.blank;
+      statScore.textContent = `${result.percentage}%`;
+      resultSubtitle.textContent = `${result.total} preguntas corregidas`;
+      reviewList.innerHTML = "";
+
+      result.details.forEach(item => {
+        const div = document.createElement("div");
+        div.className = `review-item ${item.status === "wrong" ? "bad" : item.status === "correct" ? "ok" : "pending"}`;
+
+        const statusLabel = {
+          correct: "Correcta",
+          wrong: "Incorrecta",
+          blank: "En blanco"
+        }[item.status];
+
+        div.innerHTML = `
+          <strong>Pregunta ${item.visibleIndex + 1} · ${statusLabel}</strong>
+          <p>${escapeHtml(item.question.pregunta)}</p>
+          <p><strong>Tu respuesta:</strong> ${item.answer ? escapeHtml(item.answer) : "—"}</p>
+          <p><strong>Respuesta correcta:</strong> ${escapeHtml(normalizeAnswer(item.question.respuesta))}</p>
+          ${item.question.explicacion ? `<p><strong>Explicación:</strong> ${escapeHtml(item.question.explicacion)}</p>` : ""}
+        `;
+
+        reviewList.appendChild(div);
+      });
+    }
+
+    function showQuiz() {
+      quizView.classList.remove("hidden");
+      resultView.classList.add("hidden");
+    }
+
+    function showResults() {
+      quizView.classList.add("hidden");
+      resultView.classList.remove("hidden");
+    }
+
+    function setStatus(message, type) {
+      loadStatus.textContent = message;
+      loadStatus.className = `status-box ${type}`;
+    }
+
+    function clearStatus() {
+      loadStatus.textContent = "";
+      loadStatus.className = "status-box";
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    fileInput.addEventListener("change", async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        validateQuestions(parsed);
+        questions = parsed;
+        progress = {};
+        order = questions.map((_, index) => index);
+        currentIndex = 0;
+        filteredIndexes = null;
+        resultMode = false;
+        saveQuestions();
+        saveProgress();
+        jsonEditor.value = JSON.stringify(questions, null, 2);
+        setStatus(`JSON cargado correctamente: ${questions.length} preguntas.`, "ok");
+        showQuiz();
+        render();
+      } catch (error) {
+        setStatus(`Error: ${error.message}`, "bad");
+      }
+    });
+
+    startBtn.addEventListener("click", startQuiz);
+
+    downloadSampleBtn.addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify(sampleQuestions, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "preguntas_ejemplo.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    prevBtn.addEventListener("click", () => {
+      currentIndex--;
+      render();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      currentIndex++;
+      render();
+    });
+
+    finishBtn.addEventListener("click", () => {
+      resultMode = true;
+      render();
+    });
+
+    clearAnswerBtn.addEventListener("click", () => {
+      const realIndex = getVisibleIndexes()[currentIndex];
+      delete progress[getQuestionId(realIndex)];
+      saveProgress();
+      render();
+    });
+
+    backToQuizBtn.addEventListener("click", () => {
+      resultMode = false;
+      showQuiz();
+      render();
+    });
+
+    retryWrongBtn.addEventListener("click", () => {
+      const result = calculateResult();
+      const wrongIndexes = result.details
+        .filter(item => item.status === "wrong" || item.status === "blank")
+        .map(item => item.realIndex);
+
+      if (wrongIndexes.length === 0) {
+        alert("No hay falladas o en blanco para repetir.");
+        return;
+      }
+
+      filteredIndexes = wrongIndexes;
+      currentIndex = 0;
+      resultMode = false;
+      showQuiz();
+      render();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      if (!confirm("¿Seguro que quieres reiniciar todas las respuestas?")) return;
+      progress = {};
+      filteredIndexes = null;
+      currentIndex = 0;
+      resultMode = false;
+      saveProgress();
+      clearStatus();
+      showQuiz();
+      render();
+    });
+
+    toggleEditorBtn.addEventListener("click", () => {
+      editorPanel.classList.toggle("visible");
+      jsonEditor.value = JSON.stringify(questions, null, 2);
+    });
+
+    saveJsonBtn.addEventListener("click", () => {
+      try {
+        const parsed = JSON.parse(jsonEditor.value);
+        validateQuestions(parsed);
+        questions = parsed;
+        progress = {};
+        order = questions.map((_, index) => index);
+        currentIndex = 0;
+        filteredIndexes = null;
+        resultMode = false;
+        saveQuestions();
+        saveProgress();
+        setStatus(`JSON guardado correctamente: ${questions.length} preguntas.`, "ok");
+        showQuiz();
+        render();
+      } catch (error) {
+        alert(`JSON inválido: ${error.message}`);
+      }
+    });
+
+    restoreSampleBtn.addEventListener("click", () => {
+      if (!confirm("¿Restaurar el ejemplo inicial? Esto sustituirá el banco actual.")) return;
+      questions = structuredClone(sampleQuestions);
+      progress = {};
+      order = questions.map((_, index) => index);
+      currentIndex = 0;
+      filteredIndexes = null;
+      resultMode = false;
+      saveQuestions();
+      saveProgress();
+      jsonEditor.value = JSON.stringify(questions, null, 2);
+      setStatus("Ejemplo restaurado correctamente.", "ok");
+      showQuiz();
+      render();
+    });
+
+    exportProgressBtn.addEventListener("click", async () => {
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        questions,
+        progress
+      };
+      const text = JSON.stringify(payload, null, 2);
+
+      try {
+        await navigator.clipboard.writeText(text);
+        alert("Progreso copiado al portapapeles.");
+      } catch {
+        const blob = new Blob([text], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "progreso_test.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    });
+
+    jsonEditor.value = JSON.stringify(questions, null, 2);
+    render();
+  </script>
+</body>
+</html>
+
