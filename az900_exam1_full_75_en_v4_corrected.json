@@ -1,0 +1,1042 @@
+[
+  {
+    "id": "Q1",
+    "pregunta": "Question 1: Your company wants to subscribe to an Azure support plan. The support plan must allow opening new technical support requests. Which support plans allow this?",
+    "tipo": "multi_select",
+    "respuesta": [
+      "Developer",
+      "Standard",
+      "Professional Direct",
+      "Unified Enterprise"
+    ],
+    "opciones": [
+      "Basic",
+      "Developer",
+      "Standard",
+      "Professional Direct",
+      "Unified Enterprise"
+    ],
+    "explicacion": "All Azure customers can access billing and subscription management support, but technical support requires a paid support plan such as Developer, Standard, Professional Direct, or Unified Enterprise. Basic is not enough for technical support requests."
+  },
+  {
+    "id": "Q2",
+    "pregunta": "Question 2: Your company plans to migrate all its virtual machines to a pay-as-you-go Azure subscription. Solution: Recommend the elastic expenditure model. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "No",
+    "explicacion": "Pay-as-you-go is an operational expenditure (OpEx) model, not an elastic expenditure model."
+  },
+  {
+    "id": "Q3",
+    "pregunta": "Question 3: For each statement about Azure subscriptions and Microsoft Entra ID tenants, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "An Azure subscription can be associated with multiple Microsoft Entra ID tenants.": "No",
+      "You can change the Microsoft Entra ID tenant to which an Azure subscription is associated.": "Yes",
+      "When an Azure subscription expires, the associated Microsoft Entra ID tenant is deleted automatically.": "No"
+    },
+    "afirmaciones": [
+      "An Azure subscription can be associated with multiple Microsoft Entra ID tenants.",
+      "You can change the Microsoft Entra ID tenant to which an Azure subscription is associated.",
+      "When an Azure subscription expires, the associated Microsoft Entra ID tenant is deleted automatically."
+    ],
+    "explicacion": "A subscription is associated with one tenant at a time. The directory association can be changed, and deleting/expiring a subscription does not automatically delete the tenant."
+  },
+  {
+    "id": "Q4",
+    "pregunta": "Question 4: Resource groups provide organizations with the ability to manage compliance of Azure resources across multiple subscriptions. Which replacement makes the statement correct?",
+    "tipo": "multiple",
+    "respuesta": "Management groups",
+    "opciones": [
+      "No change is needed",
+      "Management groups",
+      "Azure Policy",
+      "Azure App Service plans"
+    ],
+    "explicacion": "Management groups are used to organize and govern multiple Azure subscriptions."
+  },
+  {
+    "id": "Q5",
+    "pregunta": "Question 5: Your company has several departments, and resources used by each department will be managed by an administrator. Which two techniques can be used to segment Azure by department?",
+    "tipo": "multi_select",
+    "respuesta": [
+      "Multiple subscriptions",
+      "Multiple resource groups"
+    ],
+    "opciones": [
+      "Multiple subscriptions",
+      "Multiple Microsoft Entra ID directories",
+      "Multiple regions",
+      "Multiple resource groups"
+    ],
+    "explicacion": "Departments can be separated by subscriptions or by resource groups, depending on administrative and billing boundaries."
+  },
+  {
+    "id": "Q6",
+    "pregunta": "Question 6: For each statement about Azure subscriptions, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "A single Microsoft account can be used to manage multiple Azure subscriptions.": "Yes",
+      "Two Azure subscriptions can be merged into a single subscription.": "No",
+      "A company can use resources from multiple subscriptions.": "Yes"
+    },
+    "afirmaciones": [
+      "A single Microsoft account can be used to manage multiple Azure subscriptions.",
+      "Two Azure subscriptions can be merged into a single subscription.",
+      "A company can use resources from multiple subscriptions."
+    ],
+    "explicacion": "One account can manage multiple subscriptions, but subscriptions are not merged into one. Organizations can use resources across multiple subscriptions."
+  },
+  {
+    "id": "Q7",
+    "pregunta": "Question 7: You have several virtual machines in an Azure subscription. You create a new subscription. Which statement is correct?",
+    "tipo": "multiple",
+    "respuesta": "The virtual machines can be moved to the new subscription.",
+    "opciones": [
+      "The virtual machines cannot be moved to the new subscription.",
+      "The virtual machines can be moved to the new subscription.",
+      "The virtual machines can be moved to the new subscription only if they are all in the same resource group.",
+      "The virtual machines can be moved to the new subscription only if they run Windows Server 2016."
+    ],
+    "explicacion": "Azure resources such as virtual machines can generally be moved between subscriptions when move requirements are met."
+  },
+  {
+    "id": "Q8",
+    "pregunta": "Question 8: You have several Azure virtual machines. You plan to allow client computers on your on-premises network to communicate with the Azure virtual machines. Which two Azure resources should be included?",
+    "tipo": "multi_select",
+    "respuesta": [
+      "A virtual network gateway",
+      "A gateway subnet"
+    ],
+    "opciones": [
+      "A virtual network gateway",
+      "A load balancer",
+      "An application gateway",
+      "A virtual network",
+      "A gateway subnet"
+    ],
+    "explicacion": "A VPN connection to Azure requires a virtual network gateway, which is deployed in a dedicated gateway subnet."
+  },
+  {
+    "id": "Q9",
+    "pregunta": "Question 9: You try to create several Microsoft SQL Server managed instances in Azure and receive a message that you must increase Azure subscription limits. What should you do?",
+    "tipo": "multiple",
+    "respuesta": "Create a new support request",
+    "opciones": [
+      "Create a service health alert",
+      "Upgrade your support plan",
+      "Modify an Azure Policy",
+      "Create a new support request"
+    ],
+    "explicacion": "Quota and subscription limit increases are requested by creating a support request."
+  },
+  {
+    "id": "Q10",
+    "pregunta": "Question 10: For each statement about Azure subscriptions and resource groups, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "Each Azure subscription can contain multiple account administrators.": "No",
+      "Each Azure subscription can be managed by using a Microsoft account only.": "No",
+      "An Azure resource group contains multiple Azure subscriptions.": "No"
+    },
+    "afirmaciones": [
+      "Each Azure subscription can contain multiple account administrators.",
+      "Each Azure subscription can be managed by using a Microsoft account only.",
+      "An Azure resource group contains multiple Azure subscriptions."
+    ],
+    "explicacion": "A subscription is not limited to Microsoft accounts only, and a resource group belongs to a single subscription."
+  },
+  {
+    "id": "Q11",
+    "pregunta": "Question 11: For each statement about Availability Zones, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "Availability Zones can be implemented in all Azure regions.": "No",
+      "Only virtual machines that run Windows Server can be created in Availability Zones.": "No",
+      "Availability Zones are used to replicate data and applications to multiple regions.": "No"
+    },
+    "afirmaciones": [
+      "Availability Zones can be implemented in all Azure regions.",
+      "Only virtual machines that run Windows Server can be created in Availability Zones.",
+      "Availability Zones are used to replicate data and applications to multiple regions."
+    ],
+    "explicacion": "Availability Zones are available only in supported regions, support different workloads and operating systems, and exist within a region rather than across regions."
+  },
+  {
+    "id": "Q12",
+    "pregunta": "Question 12: You plan to create an Azure virtual machine. Which Azure Storage service should be used to store unmanaged virtual machine data disks?",
+    "tipo": "multiple",
+    "respuesta": "Containers",
+    "opciones": [
+      "Containers",
+      "File shares",
+      "Tables",
+      "Queues"
+    ],
+    "explicacion": "Unmanaged VM disks are stored as VHD blobs in storage account containers."
+  },
+  {
+    "id": "Q13",
+    "pregunta": "Question 13: Your company plans to migrate all its virtual machines to a pay-as-you-go Azure subscription. Solution: Recommend the scalable expenditure model. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "No",
+    "explicacion": "The correct spending model for pay-as-you-go cloud services is OpEx, not a scalable expenditure model."
+  },
+  {
+    "id": "Q14",
+    "pregunta": "Question 14: Your company plans to move several servers to Azure. Compliance policy states that a server named FinServer must be on a separate network segment. Which solution should you recommend?",
+    "tipo": "multiple",
+    "respuesta": "A virtual network for FinServer and another virtual network for all other servers",
+    "opciones": [
+      "A resource group for FinServer and another resource group for all other servers",
+      "A virtual network for FinServer and another virtual network for all other servers",
+      "A VPN for FinServer and a virtual network gateway for each of the other servers",
+      "One resource group for all servers and a resource lock for FinServer"
+    ],
+    "explicacion": "Virtual networks provide network segmentation. Resource groups and locks do not provide network isolation."
+  },
+  {
+    "id": "Q15",
+    "pregunta": "Question 15: You plan to map a network drive from several Windows 10 computers to Azure Storage. What should you create?",
+    "tipo": "multiple",
+    "respuesta": "A file service in a storage account",
+    "opciones": [
+      "An Azure SQL database",
+      "A virtual machine data disk",
+      "A file service in a storage account",
+      "A Blob service in a storage account"
+    ],
+    "explicacion": "Azure Files provides SMB file shares that can be mapped as network drives."
+  },
+  {
+    "id": "Q16",
+    "pregunta": "Question 16: You need an Azure database solution that can add data simultaneously from multiple regions and store JSON documents. Which service should you implement?",
+    "tipo": "multiple",
+    "respuesta": "Azure Cosmos DB",
+    "opciones": [
+      "Azure Cosmos DB",
+      "Azure Database for MySQL servers",
+      "Azure Database for MariaDB servers",
+      "SQL Data warehouses",
+      "Azure Cache for Redis",
+      "Data factories",
+      "Virtual Clusters",
+      "Elastic Job agents",
+      "SQL databases",
+      "Azure Database for PostgreSQL servers",
+      "SQL servers",
+      "Azure Database Migration Services",
+      "SQL Server stretch databases",
+      "SQL elastic pools",
+      "Managed databases",
+      "SQL managed instances"
+    ],
+    "explicacion": "Azure Cosmos DB is a globally distributed NoSQL database service that supports JSON documents and multi-region writes."
+  },
+  {
+    "id": "Q17",
+    "pregunta": "Question 17: Your company plans to start using Azure and will migrate all network resources to Azure. What should you create first?",
+    "tipo": "multiple",
+    "respuesta": "A subscription",
+    "opciones": [
+      "A subscription",
+      "A resource group",
+      "A virtual network",
+      "A management group"
+    ],
+    "explicacion": "An Azure subscription is needed before deploying Azure resources."
+  },
+  {
+    "id": "Q18",
+    "pregunta": "Question 18: For each statement about resource groups, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "All Azure resources deployed to a resource group must use the same Azure region.": "No",
+      "If you assign a tag to a resource group, all the Azure resources in that resource group are assigned the same tag.": "No",
+      "If you assign permissions for a user to manage a resource group, the user can manage all the Azure resources in that resource group.": "Yes"
+    },
+    "afirmaciones": [
+      "All Azure resources deployed to a resource group must use the same Azure region.",
+      "If you assign a tag to a resource group, all the Azure resources in that resource group are assigned the same tag.",
+      "If you assign permissions for a user to manage a resource group, the user can manage all the Azure resources in that resource group."
+    ],
+    "explicacion": "A resource group can contain resources from different regions. Tags are not automatically inherited, but RBAC assignments at the resource group scope apply to resources inside it."
+  },
+  {
+    "id": "Q19",
+    "pregunta": "Question 19: Complete the sentence: Data stored in the Archive access tier of an Azure Storage account ...",
+    "tipo": "multiple",
+    "respuesta": "must be rehydrated before the data can be accessed.",
+    "opciones": [
+      "can be accessed at any time by using AzCopy.exe.",
+      "can only be read by using Azure Backup.",
+      "must be restored before the data can be accessed.",
+      "must be rehydrated before the data can be accessed."
+    ],
+    "explicacion": "Archive tier data must be rehydrated before it can be read."
+  },
+  {
+    "id": "Q20",
+    "pregunta": "Question 20: You plan to deploy a critical line-of-business application on Azure virtual machines. The solution must provide 99.99% availability. Select the minimum number of VMs and Availability Zones.",
+    "tipo": "match",
+    "respuesta": {
+      "Minimum virtual machines": "2",
+      "Minimum Availability Zones": "2"
+    },
+    "opciones": [
+      "1",
+      "2",
+      "3"
+    ],
+    "items": [
+      "Minimum virtual machines",
+      "Minimum Availability Zones"
+    ],
+    "explicacion": "The 99.99% VM SLA requires two or more virtual machines deployed across two or more Availability Zones in the same Azure region."
+  },
+  {
+    "id": "Q21",
+    "pregunta": "Question 21: Which Azure service should you use to ingest a high volume of events from multiple applications or services for centralized processing?",
+    "tipo": "multiple",
+    "respuesta": "Azure Event Hubs",
+    "opciones": [
+      "Azure Event Hubs",
+      "Azure Analysis Services",
+      "Azure Monitor",
+      "Azure Stream Analytics"
+    ],
+    "explicacion": "Azure Event Hubs is a real-time event ingestion and streaming service designed to receive large volumes of events from multiple sources. Azure Monitor is used for monitoring logs and metrics, not as the primary event ingestion service for this scenario."
+  },
+  {
+    "id": "Q22",
+    "pregunta": "Question 22: Complete the sentence: An Availability Zone in Azure has physically separate locations ...",
+    "tipo": "multiple",
+    "respuesta": "within a single Azure region.",
+    "opciones": [
+      "across two continents.",
+      "within a single Azure region.",
+      "within multiple Azure regions.",
+      "within a single Azure datacenter."
+    ],
+    "explicacion": "Availability Zones are physically separate datacenter locations within an Azure region."
+  },
+  {
+    "id": "Q23",
+    "pregunta": "Question 23: For each statement about Azure Storage, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "Data that is stored in an Azure Storage account automatically has at least three copies.": "Yes",
+      "All data that is copied to an Azure Storage account is backed up automatically to another Azure datacenter.": "No",
+      "An Azure Storage account can contain up to 2 TB of data and up to one million files.": "No"
+    },
+    "afirmaciones": [
+      "Data that is stored in an Azure Storage account automatically has at least three copies.",
+      "All data that is copied to an Azure Storage account is backed up automatically to another Azure datacenter.",
+      "An Azure Storage account can contain up to 2 TB of data and up to one million files."
+    ],
+    "explicacion": "Azure Storage keeps at least three replicas, but cross-datacenter or cross-region replication depends on the redundancy option selected. Storage account limits are far higher than 2 TB."
+  },
+  {
+    "id": "Q24",
+    "pregunta": "Question 24: Your company plans to migrate all its virtual machines to a pay-as-you-go Azure subscription. Solution: Recommend the operational expenditure model. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "Yes",
+    "explicacion": "Pay-as-you-go cloud consumption maps to operational expenditure (OpEx)."
+  },
+  {
+    "id": "Q25",
+    "pregunta": "Question 25: For each statement about Availability Zones, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "If you have Azure resources deployed to every region, you can implement Availability Zones in all the regions.": "No",
+      "Only virtual machines that run Windows Server can be created in Availability Zones.": "No",
+      "Availability Zones are used to replicate data and applications to multiple regions.": "No"
+    },
+    "afirmaciones": [
+      "If you have Azure resources deployed to every region, you can implement Availability Zones in all the regions.",
+      "Only virtual machines that run Windows Server can be created in Availability Zones.",
+      "Availability Zones are used to replicate data and applications to multiple regions."
+    ],
+    "explicacion": "Availability Zones are not available in every region and are within a region, not across multiple regions."
+  },
+  {
+    "id": "Q26",
+    "pregunta": "Question 26: For each statement about Azure regions, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "North America is represented by a single Azure region.": "No",
+      "Every Azure region has multiple datacenters.": "No",
+      "Data transfers between Azure services located in different Azure regions are always free.": "No"
+    },
+    "afirmaciones": [
+      "North America is represented by a single Azure region.",
+      "Every Azure region has multiple datacenters.",
+      "Data transfers between Azure services located in different Azure regions are always free."
+    ],
+    "explicacion": "North America has multiple Azure regions. A region has one or more datacenters, and inter-region data transfer is not always free."
+  },
+  {
+    "id": "Q27",
+    "pregunta": "Question 27: You need services running on Azure virtual machines to remain available if a single datacenter fails. Solution: Deploy the virtual machines to two or more scale sets. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "No",
+    "explicacion": "Scale sets do not by themselves guarantee protection from a datacenter failure. Availability Zones are the direct mechanism for this requirement."
+  },
+  {
+    "id": "Q28",
+    "pregunta": "Question 28: You need to receive a notification when Microsoft plans maintenance that could affect resources deployed to an Azure subscription. What should you use?",
+    "tipo": "multiple",
+    "respuesta": "Azure Service Health",
+    "opciones": [
+      "Azure Monitor",
+      "Azure Service Health",
+      "Azure Advisor",
+      "Microsoft Trust Center"
+    ],
+    "explicacion": "Azure Service Health provides service issue, planned maintenance, and health advisory notifications for your Azure resources."
+  },
+  {
+    "id": "Q29",
+    "pregunta": "Question 29: Match each Azure IoT service to the correct description.",
+    "tipo": "match",
+    "respuesta": {
+      "A managed service that provides bidirectional communication between IoT devices and Azure": "IoT Hub",
+      "A fully managed SaaS solution to connect, monitor, and manage IoT devices at scale": "IoT Central",
+      "A software and hardware solution that provides communication and security features for IoT devices": "Azure Sphere"
+    },
+    "opciones": [
+      "Azure Sphere",
+      "IoT Central",
+      "IoT Hub"
+    ],
+    "items": [
+      "A managed service that provides bidirectional communication between IoT devices and Azure",
+      "A fully managed SaaS solution to connect, monitor, and manage IoT devices at scale",
+      "A software and hardware solution that provides communication and security features for IoT devices"
+    ],
+    "explicacion": "IoT Hub provides device-cloud communication, IoT Central is SaaS IoT management, and Azure Sphere combines secure hardware, OS, and cloud security."
+  },
+  {
+    "id": "Q30",
+    "pregunta": "Question 30: For each statement about Azure Virtual Desktop, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "A Windows Virtual Desktop session host can run Windows 10 only.": "No",
+      "A Windows Virtual Desktop host pool that includes 20 session hosts supports a maximum of 20 simultaneous user connections.": "No",
+      "Windows Virtual Desktop supports desktop and app virtualization.": "Yes"
+    },
+    "afirmaciones": [
+      "A Windows Virtual Desktop session host can run Windows 10 only.",
+      "A Windows Virtual Desktop host pool that includes 20 session hosts supports a maximum of 20 simultaneous user connections.",
+      "Windows Virtual Desktop supports desktop and app virtualization."
+    ],
+    "explicacion": "Azure Virtual Desktop supports desktop and app virtualization and can support multiple sessions, depending on configuration and OS."
+  },
+  {
+    "id": "Q31",
+    "pregunta": "Question 31: Complete the sentence: Which tool can calculate cost savings due to reduced electricity consumption as a result of migrating on-premises Microsoft SQL servers to Azure?",
+    "tipo": "multiple",
+    "respuesta": "The Azure Total Cost of Ownership (TCO) calculator",
+    "opciones": [
+      "The Azure Migrate: Server Assessment tool",
+      "The Azure Total Cost of Ownership (TCO) calculator",
+      "The Database Migration Assistant",
+      "The pricing calculator in Azure"
+    ],
+    "explicacion": "The TCO calculator estimates savings including datacenter costs such as power and cooling."
+  },
+  {
+    "id": "Q32",
+    "pregunta": "Question 32: For each statement about Availability Zones, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "You can use Availability Zones in Azure to protect Azure virtual machines from a datacenter failure.": "Yes",
+      "You can use Availability Zones in Azure to protect Azure virtual machines from a region failure.": "No",
+      "You can use Availability Zones in Azure to protect Azure managed disks from a datacenter failure.": "Yes"
+    },
+    "afirmaciones": [
+      "You can use Availability Zones in Azure to protect Azure virtual machines from a datacenter failure.",
+      "You can use Availability Zones in Azure to protect Azure virtual machines from a region failure.",
+      "You can use Availability Zones in Azure to protect Azure managed disks from a datacenter failure."
+    ],
+    "explicacion": "Availability Zones protect supported zonal or zone-redundant resources from datacenter-level failure, not full region failure."
+  },
+  {
+    "id": "Q33",
+    "pregunta": "Question 33: Complete the sentence: A cloud service that supports a maximum of 20 instances is more ___ than a service that supports a maximum of five instances.",
+    "tipo": "multiple",
+    "respuesta": "scalable",
+    "opciones": [
+      "distributed",
+      "scalable",
+      "secure"
+    ],
+    "explicacion": "A service that supports more instances has greater scalability."
+  },
+  {
+    "id": "Q34",
+    "pregunta": "Question 34: You need to implement an AI solution in Azure and create, test, and deploy predictive analytics. Solution: Use Azure Cosmos DB. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "No",
+    "explicacion": "Cosmos DB is a database service. Predictive analytics model development and deployment is done with Azure Machine Learning."
+  },
+  {
+    "id": "Q35",
+    "pregunta": "Question 35: For each statement about Microsoft Entra ID, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "To use Microsoft Entra ID credentials to sign in to a computer that runs Windows 10, the computer must be joined to Microsoft Entra ID.": "Yes",
+      "Users in Microsoft Entra ID are organized by using resource groups.": "No",
+      "Microsoft Entra ID groups support dynamic membership rules.": "Yes"
+    },
+    "afirmaciones": [
+      "To use Microsoft Entra ID credentials to sign in to a computer that runs Windows 10, the computer must be joined to Microsoft Entra ID.",
+      "Users in Microsoft Entra ID are organized by using resource groups.",
+      "Microsoft Entra ID groups support dynamic membership rules."
+    ],
+    "explicacion": "Resource groups organize Azure resources, not Entra ID users. Entra ID supports groups and dynamic membership."
+  },
+  {
+    "id": "Q36",
+    "pregunta": "Question 36: You need services running on several Azure virtual machines to remain available if a single datacenter fails. Which two solutions are valid?",
+    "tipo": "multi_select",
+    "respuesta": [
+      "Deploy the virtual machines to two or more Availability Zones",
+      "Deploy the virtual machines to two or more regions"
+    ],
+    "opciones": [
+      "Deploy the virtual machines to two or more Availability Zones",
+      "Deploy the virtual machines to two or more resource groups",
+      "Deploy the virtual machines to a scale set",
+      "Deploy the virtual machines to two or more regions"
+    ],
+    "explicacion": "Availability Zones are the direct solution for datacenter failure; multi-region deployment also survives a single datacenter failure."
+  },
+  {
+    "id": "Q37",
+    "pregunta": "Question 37: You plan to deploy 20 virtual machines to Azure. To ensure VM1 cannot connect to the other virtual machines, VM1 must ...",
+    "tipo": "multiple",
+    "respuesta": "be deployed to a separate virtual network.",
+    "opciones": [
+      "be deployed to a separate virtual network.",
+      "run a different operating system than the other virtual machines.",
+      "be deployed to a separate resource group.",
+      "have two network interfaces."
+    ],
+    "explicacion": "A separate virtual network provides network isolation."
+  },
+  {
+    "id": "Q38",
+    "pregunta": "Question 38: Match each Azure data service to the correct description.",
+    "tipo": "match",
+    "respuesta": {
+      "A fully managed data warehouse that has integral security at every level of scale at no extra cost": "Azure Synapse Analytics",
+      "A globally distributed database that supports NoSQL": "Azure Cosmos DB",
+      "Managed Apache Hadoop clusters in the cloud that enable you to process massive amounts of data": "Azure HDInsight"
+    },
+    "opciones": [
+      "Azure Cosmos DB",
+      "Azure HDInsight",
+      "Azure Synapse Analytics"
+    ],
+    "items": [
+      "A fully managed data warehouse that has integral security at every level of scale at no extra cost",
+      "A globally distributed database that supports NoSQL",
+      "Managed Apache Hadoop clusters in the cloud that enable you to process massive amounts of data"
+    ],
+    "explicacion": "Synapse Analytics is the analytics/data warehouse platform, Cosmos DB is globally distributed NoSQL, and HDInsight provides managed Hadoop/Spark clusters."
+  },
+  {
+    "id": "Q39",
+    "pregunta": "Question 39: For each statement about Azure Storage access tiers, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "The Archive access tier is set at the storage account level.": "No",
+      "The Hot access tier is recommended for data that is accessed and modified frequently.": "Yes",
+      "The Cool access tier is recommended for long-term backups.": "No"
+    },
+    "afirmaciones": [
+      "The Archive access tier is set at the storage account level.",
+      "The Hot access tier is recommended for data that is accessed and modified frequently.",
+      "The Cool access tier is recommended for long-term backups."
+    ],
+    "explicacion": "Archive is set at the blob level and is designed for rarely accessed, long-term data. Hot is for frequent access; Archive is usually more appropriate for long-term backups."
+  },
+  {
+    "id": "Q40",
+    "pregunta": "Question 40: What is the most severe failure that an Azure Availability Zone can protect access to an Azure service from?",
+    "tipo": "multiple",
+    "respuesta": "A datacenter failure",
+    "opciones": [
+      "A physical server failure",
+      "An Azure region failure",
+      "A storage failure",
+      "A datacenter failure"
+    ],
+    "explicacion": "Availability Zones protect from datacenter-level failures within a region, not full region failures."
+  },
+  {
+    "id": "Q41",
+    "pregunta": "Question 41: You need to purchase a third-party virtual security appliance to deploy in an Azure subscription. What should you use?",
+    "tipo": "multiple",
+    "respuesta": "Azure Marketplace",
+    "opciones": [
+      "Azure subscriptions",
+      "Azure Security Center",
+      "Azure Marketplace",
+      "Microsoft Store"
+    ],
+    "explicacion": "Azure Marketplace is used to find and deploy third-party solutions and appliances."
+  },
+  {
+    "id": "Q42",
+    "pregunta": "Question 42: Match each serverless solution to the correct characteristic.",
+    "tipo": "match",
+    "respuesta": {
+      "Runs event-driven custom code without managing servers": "Azure Functions",
+      "Creates automated workflows by using connectors": "Azure Logic Apps",
+      "Integrates apps, data, services, and systems with little or no custom code": "Azure Logic Apps"
+    },
+    "opciones": [
+      "Azure Functions",
+      "Azure Logic Apps"
+    ],
+    "items": [
+      "Runs event-driven custom code without managing servers",
+      "Creates automated workflows by using connectors",
+      "Integrates apps, data, services, and systems with little or no custom code"
+    ],
+    "explicacion": "Azure Functions is serverless compute for running event-driven code. Azure Logic Apps is used to build automated workflows and integrations by using connectors. The old wording about Logic Apps being always stateful or cloud-only has been removed because current Logic Apps Standard supports stateful and stateless workflows and hybrid deployment scenarios."
+  },
+  {
+    "id": "Q43",
+    "pregunta": "Question 43: Match each Azure governance feature to the correct description.",
+    "tipo": "match",
+    "respuesta": {
+      "Restrict which virtual machine types can be created in a subscription": "Azure Policy",
+      "Identify Azure resources that are associated with specific cost centers": "Azure tags",
+      "Prevent accidental deletion or modification of critical Azure resources": "Azure resource locks"
+    },
+    "opciones": [
+      "Azure Policy",
+      "Azure resource locks",
+      "Azure tags"
+    ],
+    "items": [
+      "Restrict which virtual machine types can be created in a subscription",
+      "Identify Azure resources that are associated with specific cost centers",
+      "Prevent accidental deletion or modification of critical Azure resources"
+    ],
+    "explicacion": "Azure Policy enforces rules such as allowed VM SKUs, tags classify resources for management or cost allocation, and resource locks help prevent accidental deletion or modification. Azure Blueprints has been removed from this question because it is deprecated in favor of newer deployment/governance approaches."
+  },
+  {
+    "id": "Q44",
+    "pregunta": "Question 44: Your company will migrate all network resources to Azure and retire the on-premises datacenter. Solution: Synchronize all Active Directory user accounts to Microsoft Entra ID. Does this meet the goal of reducing impact on users?",
+    "tipo": "si_no",
+    "respuesta": "Yes",
+    "explicacion": "Synchronizing identities helps users continue to use familiar accounts after migration."
+  },
+  {
+    "id": "Q45",
+    "pregunta": "Question 45: Match each Azure service to the correct description.",
+    "tipo": "match",
+    "respuesta": {
+      "Provide operating system virtualization": "Azure virtual machines",
+      "Provide portable environment for virtualized applications": "Azure Container Instances",
+      "Used to build, deploy, and scale web apps": "Azure App Service",
+      "Provide a platform for serverless code": "Azure Functions"
+    },
+    "opciones": [
+      "Azure Functions",
+      "Azure App Service",
+      "Azure virtual machines",
+      "Azure Container Instances"
+    ],
+    "items": [
+      "Provide operating system virtualization",
+      "Provide portable environment for virtualized applications",
+      "Used to build, deploy, and scale web apps",
+      "Provide a platform for serverless code"
+    ],
+    "explicacion": "Virtual machines virtualize OSs; containers package apps; App Service hosts web apps; Azure Functions runs serverless code."
+  },
+  {
+    "id": "Q46",
+    "pregunta": "Question 46: You have several virtual machines in an Azure subscription. You create a new subscription. Which statement is correct?",
+    "tipo": "multiple",
+    "respuesta": "The virtual machines can be moved to the new subscription.",
+    "opciones": [
+      "The virtual machines cannot be moved to the new subscription.",
+      "The virtual machines can be moved to the new subscription.",
+      "The virtual machines can be moved to the new subscription only if they are all in the same resource group.",
+      "The virtual machines can be moved to the new subscription only if they run Windows Server 2019."
+    ],
+    "explicacion": "Azure virtual machines can generally be moved between subscriptions when move requirements are met."
+  },
+  {
+    "id": "Q47",
+    "pregunta": "Question 47: You need to purchase a third-party virtual security appliance to deploy in an Azure subscription. What should you use?",
+    "tipo": "multiple",
+    "respuesta": "Azure Marketplace",
+    "opciones": [
+      "Azure subscriptions",
+      "Microsoft Defender for Cloud",
+      "Azure Marketplace",
+      "Microsoft Store"
+    ],
+    "explicacion": "Third-party Azure solutions are purchased and deployed from Azure Marketplace."
+  },
+  {
+    "id": "Q48",
+    "pregunta": "Question 48: Complete the sentence: Which Azure service is a highly secure IoT solution that includes a microcontroller unit (MCU) and a customized Linux operating system?",
+    "tipo": "multiple",
+    "respuesta": "Azure Sphere",
+    "opciones": [
+      "Azure Arc",
+      "Azure IoT Central",
+      "Azure IoT Hub",
+      "Azure Sphere"
+    ],
+    "explicacion": "Azure Sphere includes certified MCU hardware, a secure OS, and cloud security services."
+  },
+  {
+    "id": "Q49",
+    "pregunta": "Question 49: You need a VM-based service to be available if a datacenter fails. What should be used as part of the VM deployment?",
+    "tipo": "multiple",
+    "respuesta": "Availability zones",
+    "opciones": [
+      "Availability sets",
+      "Proximity placement groups",
+      "Host groups",
+      "Availability zones"
+    ],
+    "explicacion": "Availability Zones protect from datacenter failure."
+  },
+  {
+    "id": "Q50",
+    "pregunta": "Question 50: Your company has an Azure subscription with resources in several regions. You need to ensure administrators can create resources only in those regions. What should you use?",
+    "tipo": "multiple",
+    "respuesta": "Azure Policy",
+    "opciones": [
+      "A read-only lock",
+      "Azure Policy",
+      "A management group",
+      "A reservation"
+    ],
+    "explicacion": "Azure Policy can restrict allowed locations for resource deployment."
+  },
+  {
+    "id": "Q51",
+    "pregunta": "Question 51: Complete the sentence: An Azure region ...",
+    "tipo": "multiple",
+    "respuesta": "contains one or more datacenters that are connected by using a low-latency network.",
+    "opciones": [
+      "contains one or more datacenters that are connected by using a low-latency network.",
+      "is found in each country where Microsoft has a subsidiary office.",
+      "can be found in every country in Europe and the Americas only.",
+      "contains one or more datacenters that are connected by using a high-latency network."
+    ],
+    "explicacion": "An Azure region consists of one or more datacenters connected by a low-latency network."
+  },
+  {
+    "id": "Q52",
+    "pregunta": "Question 52: Complete the sentence: You can use the Azure File Sync agent to sync on-premises data to an Azure ...",
+    "tipo": "multiple",
+    "respuesta": "file share.",
+    "opciones": [
+      "blob container.",
+      "Data Lake Storage container.",
+      "file share.",
+      "queue."
+    ],
+    "explicacion": "Azure File Sync synchronizes on-premises file servers with Azure file shares."
+  },
+  {
+    "id": "Q53",
+    "pregunta": "Question 53: What is the function of a site-to-site VPN?",
+    "tipo": "multiple",
+    "respuesta": "It provides a connection from an on-premises VPN device to an Azure VPN gateway.",
+    "opciones": [
+      "It provides a secure connection between a computer on a public network and the corporate network.",
+      "It provides a dedicated private connection to Azure that does not travel over the Internet.",
+      "It provides a connection from an on-premises VPN device to an Azure VPN gateway."
+    ],
+    "explicacion": "A site-to-site VPN connects an on-premises VPN device to an Azure VPN gateway over an encrypted tunnel."
+  },
+  {
+    "id": "Q54",
+    "pregunta": "Question 54: Match the cloud service models to the correct offerings.",
+    "tipo": "match",
+    "respuesta": {
+      "Azure App Service": "Platform as a Service (PaaS)",
+      "Azure virtual machines": "Infrastructure as a Service (IaaS)",
+      "Microsoft Dynamics 365": "Software as a Service (SaaS)"
+    },
+    "opciones": [
+      "Infrastructure as a Service (IaaS)",
+      "Platform as a Service (PaaS)",
+      "Software as a Service (SaaS)"
+    ],
+    "items": [
+      "Azure App Service",
+      "Azure virtual machines",
+      "Microsoft Dynamics 365"
+    ],
+    "explicacion": "VMs are IaaS, App Service is PaaS, and Dynamics 365 is SaaS."
+  },
+  {
+    "id": "Q55",
+    "pregunta": "Question 55: You need to implement an AI solution in Azure and create, test, and deploy predictive analytics. Solution: Use Azure Machine Learning Studio / Azure Machine Learning. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "Yes",
+    "explicacion": "For current terminology, use Azure Machine Learning. The old mock uses Azure Machine Learning Studio, but the concept is predictive analytics model development and deployment."
+  },
+  {
+    "id": "Q56",
+    "pregunta": "Question 56: Match the cloud service models to the correct solutions.",
+    "tipo": "match",
+    "respuesta": {
+      "A cloud-based file server": "Infrastructure-as-a-Service (IaaS)",
+      "A cloud-based accounting system": "Software-as-a-Service (SaaS)",
+      "A cloud-based service for custom apps": "Platform-as-a-Service (PaaS)"
+    },
+    "opciones": [
+      "Infrastructure-as-a-Service (IaaS)",
+      "Platform-as-a-Service (PaaS)",
+      "Software-as-a-Service (SaaS)"
+    ],
+    "items": [
+      "A cloud-based file server",
+      "A cloud-based accounting system",
+      "A cloud-based service for custom apps"
+    ],
+    "explicacion": "A file server on a VM is IaaS, an accounting app is SaaS, and custom app hosting is PaaS."
+  },
+  {
+    "id": "Q57",
+    "pregunta": "Question 57: You need to manage containers. Which two services can you use?",
+    "tipo": "multi_select",
+    "respuesta": [
+      "Azure Container Instances",
+      "Azure Kubernetes Service (AKS)"
+    ],
+    "opciones": [
+      "Azure Virtual Desktop",
+      "Azure virtual machines",
+      "Azure Functions",
+      "Azure Container Instances",
+      "Azure Kubernetes Service (AKS)"
+    ],
+    "explicacion": "ACI and AKS are Azure container services."
+  },
+  {
+    "id": "Q58",
+    "pregunta": "Question 58: Complete the sentence: When you need to delegate permissions to several Azure virtual machines simultaneously, you must deploy the Azure virtual machines ...",
+    "tipo": "multiple",
+    "respuesta": "to the same resource group.",
+    "opciones": [
+      "to the same Azure region.",
+      "by using the same Azure Resource Manager template.",
+      "to the same resource group.",
+      "to the same availability zone."
+    ],
+    "explicacion": "RBAC permissions can be assigned at the resource group scope and inherited by resources in that group."
+  },
+  {
+    "id": "Q59",
+    "pregunta": "Question 59: You need services running on Azure virtual machines to remain available if a single datacenter fails. Solution: Deploy the virtual machines to two or more Availability Zones. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "Yes",
+    "explicacion": "Availability Zones protect services from datacenter failure within a region."
+  },
+  {
+    "id": "Q60",
+    "pregunta": "Question 60: One benefit of Azure Synapse Analytics dedicated SQL pool (formerly Azure SQL Data Warehouse) is that high availability is built into the platform. Which option is correct?",
+    "tipo": "multiple",
+    "respuesta": "No change is needed",
+    "opciones": [
+      "No change is needed",
+      "Autoscaling",
+      "Data compression",
+      "Versioning"
+    ],
+    "explicacion": "Dedicated SQL pool, formerly Azure SQL Data Warehouse, is a managed analytics platform where high availability is built into the service."
+  },
+  {
+    "id": "Q61",
+    "pregunta": "Question 61: You need services running on Azure virtual machines to remain available if a single datacenter fails. Solution: Deploy the virtual machines to two or more regions. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "Yes",
+    "explicacion": "Availability Zones are the direct solution, but deployment across multiple regions also survives a single datacenter failure."
+  },
+  {
+    "id": "Q62",
+    "pregunta": "Question 62: Complete the sentence: An Azure container instance is an example of an Azure ...",
+    "tipo": "multiple",
+    "respuesta": "compute service.",
+    "opciones": [
+      "compute service.",
+      "identity service.",
+      "networking service.",
+      "storage service."
+    ],
+    "explicacion": "Azure Container Instances is an Azure compute service."
+  },
+  {
+    "id": "Q63",
+    "pregunta": "Question 63: At which OSI layer does ExpressRoute operate?",
+    "tipo": "multiple",
+    "respuesta": "Layer 3",
+    "opciones": [
+      "Layer 2",
+      "Layer 3",
+      "Layer 5",
+      "Layer 7"
+    ],
+    "explicacion": "ExpressRoute provides private connectivity using layer 3 routing."
+  },
+  {
+    "id": "Q64",
+    "pregunta": "Question 64: Complete the sentence: Application Insights is a feature of ...",
+    "tipo": "multiple",
+    "respuesta": "Azure Monitor",
+    "opciones": [
+      "Azure Advisor",
+      "Azure Application Gateway",
+      "Azure Arc",
+      "Azure Monitor"
+    ],
+    "explicacion": "Application Insights is part of Azure Monitor."
+  },
+  {
+    "id": "Q65",
+    "pregunta": "Question 65: For each statement about resource groups, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "Azure resources can only access other resources in the same resource group.": "No",
+      "If you delete a resource group, all the resources in the resource group will be deleted.": "Yes",
+      "A resource group can contain resources from multiple Azure regions.": "Yes"
+    },
+    "afirmaciones": [
+      "Azure resources can only access other resources in the same resource group.",
+      "If you delete a resource group, all the resources in the resource group will be deleted.",
+      "A resource group can contain resources from multiple Azure regions."
+    ],
+    "explicacion": "Resource groups are management containers, not network boundaries. Deleting a resource group deletes contained resources, and resources can be in different regions."
+  },
+  {
+    "id": "Q66",
+    "pregunta": "Question 66: Your company has several business units that need identical Azure resources. You need a strategy to create Azure resources automatically. Solution: Include Azure API Management in the strategy. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "No",
+    "explicacion": "Azure API Management manages APIs. Automated resource creation is typically done with ARM/Bicep/Terraform/templates, not API Management."
+  },
+  {
+    "id": "Q67",
+    "pregunta": "Question 67: You plan to store 20 TB of data in Azure. The data will be accessed infrequently and visualized with Microsoft Power BI. Which two storage solutions should you recommend?",
+    "tipo": "multi_select",
+    "respuesta": [
+      "Azure Data Lake Storage",
+      "Azure Synapse Analytics dedicated SQL pool"
+    ],
+    "opciones": [
+      "Azure Data Lake Storage",
+      "Azure Cosmos DB",
+      "Azure Synapse Analytics dedicated SQL pool",
+      "Azure SQL Database",
+      "Azure Database for PostgreSQL"
+    ],
+    "explicacion": "Azure Data Lake Storage and Azure Synapse Analytics dedicated SQL pool are suitable analytics storage solutions for large datasets and Power BI scenarios. Azure SQL Data Warehouse is now referred to as dedicated SQL pool in Azure Synapse Analytics."
+  },
+  {
+    "id": "Q68",
+    "pregunta": "Question 68: You have an Azure environment with 10 web apps. Which URL should you use to manage all Azure resources?",
+    "tipo": "multiple",
+    "respuesta": "https://portal.azure.com",
+    "opciones": [
+      "https://admin.azure.com",
+      "https://portal.azure.com",
+      "https://www.microsoft.com",
+      "https://portal.azurewebsites.com"
+    ],
+    "explicacion": "The Azure portal is available at https://portal.azure.com."
+  },
+  {
+    "id": "Q69",
+    "pregunta": "Question 69: Order the Azure Storage account redundancy options from lowest to highest redundancy.",
+    "tipo": "order",
+    "respuesta": [
+      "Locally-redundant storage (LRS)",
+      "Zone-redundant storage (ZRS)",
+      "Geo-redundant storage (GRS)"
+    ],
+    "opciones": [
+      "Zone-redundant storage (ZRS)",
+      "Geo-redundant storage (GRS)",
+      "Locally-redundant storage (LRS)"
+    ],
+    "explicacion": "LRS stores three copies in one datacenter, ZRS replicates across zones in a region, and GRS replicates to a secondary region."
+  },
+  {
+    "id": "Q70",
+    "pregunta": "Question 70: Complete the sentence: Azure Blob Storage is a ...",
+    "tipo": "multiple",
+    "respuesta": "storage service optimized for very large objects, such as video files and bitmaps.",
+    "opciones": [
+      "data store for queuing and reliably delivering messages between applications.",
+      "file share that can be mapped as a network drive.",
+      "key/value store for non-relational, structured data.",
+      "storage service optimized for very large objects, such as video files and bitmaps."
+    ],
+    "explicacion": "Blob Storage is object storage for unstructured data such as images, videos, and backups."
+  },
+  {
+    "id": "Q71",
+    "pregunta": "Question 71: An Azure administrator plans to run a PowerShell script that creates Azure resources. Solution: Run the script from a Linux computer with Azure CLI tools installed. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "No",
+    "explicacion": "The requirement is to run a PowerShell script. Azure CLI alone on Linux is not enough unless PowerShell/Az PowerShell is available."
+  },
+  {
+    "id": "Q72",
+    "pregunta": "Question 72: An Azure administrator plans to run a PowerShell script that creates Azure resources. Solution: Run the script from Chrome OS and use Azure Cloud Shell. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "Yes",
+    "explicacion": "Azure Cloud Shell includes PowerShell and can run scripts from a browser."
+  },
+  {
+    "id": "Q73",
+    "pregunta": "Question 73: For each statement about Azure Service Health, select Yes if the statement is true. Otherwise, select No.",
+    "tipo": "group_yes_no",
+    "respuesta": {
+      "From Azure Service Health, an administrator can view the health of all the services in an Azure environment.": "Yes",
+      "From Azure Service Health, an administrator can create a rule to be alerted if an Azure service fails.": "Yes",
+      "From Azure Service Health, an administrator can prevent a service failure.": "No"
+    },
+    "afirmaciones": [
+      "From Azure Service Health, an administrator can view the health of all the services in an Azure environment.",
+      "From Azure Service Health, an administrator can create a rule to be alerted if an Azure service fails.",
+      "From Azure Service Health, an administrator can prevent a service failure."
+    ],
+    "explicacion": "Service Health provides health status and alerts, but it cannot prevent Microsoft service failures."
+  },
+  {
+    "id": "Q74",
+    "pregunta": "Question 74: An Azure administrator plans to run a PowerShell script that creates Azure resources. Solution: Run the script from macOS with PowerShell 7 or later and the Az PowerShell module installed. Does this meet the goal?",
+    "tipo": "si_no",
+    "respuesta": "Yes",
+    "explicacion": "Azure PowerShell can be installed on macOS. The recommended setup is PowerShell 7 or later with the Az PowerShell module."
+  },
+  {
+    "id": "Q75",
+    "pregunta": "Question 75: You need to view a list of planned maintenance events that can affect the availability of an Azure subscription. Which Azure portal blade should you use?",
+    "tipo": "multiple",
+    "respuesta": "Service Health",
+    "opciones": [
+      "Azure Monitor",
+      "Advisor",
+      "Service Health",
+      "Microsoft Trust Center"
+    ],
+    "explicacion": "Azure Service Health includes planned maintenance information that can affect your Azure resources."
+  }
+]

@@ -37,7 +37,7 @@
     }
 
     .app {
-      width: min(1100px, 100%);
+      width: min(1120px, 100%);
       margin: 0 auto;
       padding: 28px 18px 48px;
     }
@@ -61,7 +61,7 @@
       margin-top: 8px;
       color: var(--muted);
       font-size: 0.98rem;
-      max-width: 680px;
+      max-width: 720px;
     }
 
     .top-actions {
@@ -113,7 +113,7 @@
     }
 
     textarea {
-      min-height: 280px;
+      min-height: 300px;
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 0.86rem;
       line-height: 1.45;
@@ -338,6 +338,7 @@
       cursor: pointer;
       font: inherit;
       color: var(--text);
+      width: 100%;
     }
 
     .option:hover {
@@ -385,6 +386,61 @@
     .option.incorrect .letter {
       background: var(--bad);
       color: white;
+    }
+
+    .complex-block {
+      display: grid;
+      gap: 12px;
+    }
+
+    .complex-row {
+      border: 1px solid var(--border);
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .complex-row-title {
+      font-weight: 750;
+      line-height: 1.4;
+    }
+
+    .yesno-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .mini-btn {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text);
+      border-radius: 999px;
+      padding: 9px 10px;
+      font-weight: 850;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    .mini-btn:hover {
+      border-color: var(--primary);
+      background: var(--primary-soft);
+      color: var(--primary);
+    }
+
+    .mini-btn.selected {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .select-row {
+      display: grid;
+      grid-template-columns: minmax(140px, 1fr) minmax(180px, 1.3fr);
+      gap: 10px;
+      align-items: center;
     }
 
     .navigation {
@@ -448,6 +504,15 @@
       background: #fffbeb;
     }
 
+    .answer-list {
+      margin: 6px 0 0;
+      padding-left: 18px;
+    }
+
+    .answer-list li {
+      margin: 3px 0;
+    }
+
     .hidden {
       display: none !important;
     }
@@ -468,6 +533,13 @@
       background: var(--warn-bg);
       color: var(--warn);
       font-size: 0.9rem;
+    }
+
+    code {
+      background: #eef2ff;
+      color: #3730a3;
+      border-radius: 6px;
+      padding: 1px 5px;
     }
 
     @media (max-width: 850px) {
@@ -518,6 +590,10 @@
       .btn {
         width: 100%;
       }
+
+      .select-row {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -539,14 +615,19 @@
 
     <section class="card editor" id="editorPanel">
       <h2>Editor del banco de preguntas</h2>
-      <p class="muted">Puedes pegar aquí el JSON completo. Sirven preguntas de opción múltiple y de sí/no.</p>
+      <p class="muted">Puedes pegar aquí el JSON completo. Soporta <code>multiple</code>, <code>si_no</code>,
+        <code>multi_select</code>, <code>group_yes_no</code>, <code>match</code>, <code>order</code> y
+        <code>fill_blank</code>.
+      </p>
       <textarea id="jsonEditor"></textarea>
       <div class="navigation">
         <button class="btn primary" id="saveJsonBtn">Guardar JSON</button>
-        <button class="btn" id="restoreSampleBtn">Restaurar ejemplo</button>
+        <button class="btn" id="restoreSampleBtn">Recargar AZ-900 por defecto</button>
       </div>
-      <div class="footer-note">Formato: <strong>pregunta</strong>, <strong>tipo</strong>, <strong>opciones</strong> si
-        es múltiple, <strong>respuesta</strong> y opcionalmente <strong>explicacion</strong>.</div>
+      <div class="footer-note">Para exámenes tipo Microsoft: <strong>choose two</strong> → <code>multi_select</code>,
+        <strong>hotspot Yes/No</strong> → <code>group_yes_no</code>, <strong>drag and drop de relacionar</strong> →
+        <code>match</code>, <strong>ordenar</strong> → <code>order</code>.
+      </div>
     </section>
 
     <main class="layout">
@@ -563,7 +644,7 @@
           <span class="pill" id="bankPill">Banco actual</span>
           <div class="muted" id="bankDescription">Usando banco de ejemplo.</div>
           <button class="btn primary" id="startBtn">Empezar / mezclar preguntas</button>
-          <button class="btn" id="downloadSampleBtn">Descargar ejemplo</button>
+          <button class="btn" id="downloadSampleBtn">Descargar banco actual</button>
         </div>
 
         <div class="progress-wrap">
@@ -633,19 +714,25 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "quiz_json_mobile_data_v1";
-    const PROGRESS_KEY = "quiz_json_mobile_progress_v1";
+    const DEFAULT_JSON_FILE = "./az900_exam1_full_75_en_v4_corrected.json";
+    const STORAGE_KEY = "quiz_json_mobile_data_v3";
+    const PROGRESS_KEY = "quiz_json_mobile_progress_v3";
+
+    const ALLOWED_TYPES = [
+      "multiple",
+      "si_no",
+      "multi_select",
+      "group_yes_no",
+      "match",
+      "order",
+      "fill_blank"
+    ];
 
     const sampleQuestions = [
       {
         pregunta: "¿Qué comando muestra la versión de Python instalada?",
         tipo: "multiple",
-        opciones: [
-          "python --version",
-          "python install",
-          "python start",
-          "python list"
-        ],
+        opciones: ["python --version", "python install", "python start", "python list"],
         respuesta: "python --version",
         explicacion: "El comando correcto es python --version. En algunos sistemas también puede usarse python3 --version."
       },
@@ -656,17 +743,58 @@
         explicacion: "Sí. JSON permite representar objetos, listas y pares clave-valor."
       },
       {
-        pregunta: "¿Cuál de estos formatos se usa normalmente para datos estructurados?",
-        tipo: "multiple",
-        opciones: ["JSON", "MP3", "PNG", "EXE"],
-        respuesta: "JSON",
-        explicacion: "JSON es uno de los formatos más usados para intercambiar y almacenar datos estructurados."
+        pregunta: "Which two services can you use to manage containers?",
+        tipo: "multi_select",
+        opciones: ["Azure Virtual Desktop", "Azure virtual machines", "Azure Functions", "Azure Container Instances", "Azure Kubernetes Service"],
+        respuesta: ["Azure Container Instances", "Azure Kubernetes Service"],
+        explicacion: "Azure Container Instances and Azure Kubernetes Service are container services."
+      },
+      {
+        pregunta: "For each statement, select Yes if the statement is true. Otherwise, select No.",
+        tipo: "group_yes_no",
+        afirmaciones: [
+          "Azure resources can belong to multiple resource groups.",
+          "A resource group can contain resources from multiple regions.",
+          "A resource group can contain resources from multiple subscriptions."
+        ],
+        respuesta: {
+          "Azure resources can belong to multiple resource groups.": "No",
+          "A resource group can contain resources from multiple regions.": "Yes",
+          "A resource group can contain resources from multiple subscriptions.": "No"
+        },
+        explicacion: "A resource belongs to one resource group. A resource group can contain resources from different regions, but not from different subscriptions."
+      },
+      {
+        pregunta: "Match each Azure service to the correct description.",
+        tipo: "match",
+        items: ["Azure Monitor", "Azure Advisor", "Azure Service Health"],
+        opciones: ["Provides personalized recommendations", "Collects metrics and logs", "Notifies about Azure service incidents and planned maintenance"],
+        respuesta: {
+          "Azure Monitor": "Collects metrics and logs",
+          "Azure Advisor": "Provides personalized recommendations",
+          "Azure Service Health": "Notifies about Azure service incidents and planned maintenance"
+        },
+        explicacion: "Each service has a different monitoring or governance purpose."
+      },
+      {
+        pregunta: "Order the Azure Storage redundancy options from lowest to highest redundancy.",
+        tipo: "order",
+        opciones: ["LRS", "ZRS", "GRS", "GZRS"],
+        respuesta: ["LRS", "ZRS", "GRS", "GZRS"],
+        explicacion: "LRS is the lowest redundancy. GZRS provides zone and geo-redundancy."
+      },
+      {
+        pregunta: "Complete the sentence: Azure ______ enables you to manage compliance across multiple subscriptions.",
+        tipo: "fill_blank",
+        opciones: ["resource groups", "management groups", "availability sets", "virtual networks"],
+        respuesta: "management groups",
+        explicacion: "Management groups help organize and govern multiple subscriptions."
       }
     ];
 
-    let questions = loadQuestions();
+    let questions = [];
     let progress = loadProgress();
-    let order = questions.map((_, index) => index);
+    let order = [];
     let currentIndex = 0;
     let resultMode = false;
     let filteredIndexes = null;
@@ -706,16 +834,52 @@
     const saveJsonBtn = document.getElementById("saveJsonBtn");
     const restoreSampleBtn = document.getElementById("restoreSampleBtn");
 
-    function loadQuestions() {
+    function clone(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    async function loadInitialQuestions() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return structuredClone(sampleQuestions);
-        const parsed = JSON.parse(raw);
-        validateQuestions(parsed);
-        return parsed;
-      } catch {
-        return structuredClone(sampleQuestions);
+
+        if (raw) {
+          const parsed = unwrapQuestions(JSON.parse(raw));
+          validateQuestions(parsed);
+          setStatus(`Banco guardado en este navegador cargado: ${parsed.length} preguntas.`, "ok");
+          return parsed;
+        }
+
+        return await loadDefaultQuestions(true);
+      } catch (error) {
+        console.warn("No se pudo cargar el banco guardado. Intentando banco por defecto:", error);
+
+        try {
+          return await loadDefaultQuestions(true);
+        } catch (defaultError) {
+          console.warn("No se pudo cargar el banco por defecto. Usando ejemplo interno:", defaultError);
+          setStatus("No se pudo cargar el JSON por defecto. Usando ejemplo interno.", "bad");
+          return clone(sampleQuestions);
+        }
       }
+    }
+
+    async function loadDefaultQuestions(saveAsCurrent = false) {
+      const response = await fetch(DEFAULT_JSON_FILE, { cache: "no-store" });
+
+      if (!response.ok) {
+        throw new Error(`No se pudo cargar ${DEFAULT_JSON_FILE}. Código HTTP: ${response.status}`);
+      }
+
+      const parsed = unwrapQuestions(await response.json());
+      validateQuestions(parsed);
+
+      if (saveAsCurrent) {
+        questions = parsed;
+        saveQuestions();
+      }
+
+      setStatus(`Banco AZ-900 por defecto cargado: ${parsed.length} preguntas.`, "ok");
+      return parsed;
     }
 
     function saveQuestions() {
@@ -735,6 +899,12 @@
       localStorage.setItem(PROGRESS_KEY, JSON.stringify(progress));
     }
 
+    function unwrapQuestions(parsed) {
+      if (Array.isArray(parsed)) return parsed;
+      if (parsed && Array.isArray(parsed.questions)) return parsed.questions;
+      throw new Error("El JSON debe ser una lista de preguntas o un objeto con la propiedad 'questions'.");
+    }
+
     function validateQuestions(list) {
       if (!Array.isArray(list)) throw new Error("El JSON debe ser una lista de preguntas.");
       if (list.length === 0) throw new Error("El banco de preguntas está vacío.");
@@ -742,42 +912,88 @@
       list.forEach((q, index) => {
         const n = index + 1;
 
-        if (!q || typeof q !== "object") throw new Error(`La pregunta ${n} no tiene formato válido.`);
+        if (!q || typeof q !== "object" || Array.isArray(q)) throw new Error(`La pregunta ${n} no tiene formato válido.`);
         if (!q.pregunta) throw new Error(`La pregunta ${n} no tiene el campo 'pregunta'.`);
         if (!q.tipo) throw new Error(`La pregunta ${n} no tiene el campo 'tipo'.`);
-        if (!q.respuesta) throw new Error(`La pregunta ${n} no tiene el campo 'respuesta'.`);
-        if (!["multiple", "si_no"].includes(q.tipo)) throw new Error(`La pregunta ${n} debe ser de tipo 'multiple' o 'si_no'.`);
+        if (!("respuesta" in q)) throw new Error(`La pregunta ${n} no tiene el campo 'respuesta'.`);
+        if (!ALLOWED_TYPES.includes(q.tipo)) throw new Error(`La pregunta ${n} tiene un tipo no válido: '${q.tipo}'.`);
 
-        if (q.tipo === "multiple") {
-          if (!Array.isArray(q.opciones) || q.opciones.length < 2) {
-            throw new Error(`La pregunta ${n} debe tener al menos dos opciones.`);
-          }
-
-          if (!q.opciones.includes(q.respuesta)) {
-            throw new Error(`La respuesta de la pregunta ${n} no está dentro de sus opciones.`);
-          }
+        if (["multiple", "fill_blank"].includes(q.tipo)) {
+          validateOptionsArray(q, n);
+          if (!q.opciones.includes(q.respuesta)) throw new Error(`La respuesta de la pregunta ${n} no está dentro de sus opciones.`);
         }
 
         if (q.tipo === "si_no") {
-          const answer = normalizeAnswer(q.respuesta);
-          if (!["Sí", "No"].includes(answer)) {
-            throw new Error(`La respuesta de la pregunta ${n} debe ser 'Sí' o 'No'.`);
+          if (!["Sí", "No"].includes(normalizeYesNo(q.respuesta))) {
+            throw new Error(`La respuesta de la pregunta ${n} debe ser 'Sí', 'Si', 'Yes' o 'No'.`);
           }
+        }
+
+        if (q.tipo === "multi_select") {
+          validateOptionsArray(q, n);
+          if (!Array.isArray(q.respuesta) || q.respuesta.length === 0) throw new Error(`La respuesta de la pregunta ${n} debe ser un array con una o más respuestas.`);
+          q.respuesta.forEach(answer => {
+            if (!q.opciones.includes(answer)) throw new Error(`Una respuesta de la pregunta ${n} no está dentro de sus opciones.`);
+          });
+        }
+
+        if (q.tipo === "group_yes_no") {
+          if (!Array.isArray(q.afirmaciones) || q.afirmaciones.length === 0) throw new Error(`La pregunta ${n} debe tener un array 'afirmaciones'.`);
+          if (!isPlainObject(q.respuesta)) throw new Error(`La respuesta de la pregunta ${n} debe ser un objeto.`);
+          q.afirmaciones.forEach(statement => {
+            if (!(statement in q.respuesta)) throw new Error(`Falta respuesta para una afirmación de la pregunta ${n}.`);
+            if (!["Sí", "No"].includes(normalizeYesNo(q.respuesta[statement]))) {
+              throw new Error(`Cada afirmación de la pregunta ${n} debe responderse con Yes/No o Sí/No.`);
+            }
+          });
+        }
+
+        if (q.tipo === "match") {
+          if (!Array.isArray(q.items) || q.items.length === 0) throw new Error(`La pregunta ${n} debe tener un array 'items'.`);
+          validateOptionsArray(q, n);
+          if (!isPlainObject(q.respuesta)) throw new Error(`La respuesta de la pregunta ${n} debe ser un objeto.`);
+          q.items.forEach(item => {
+            if (!(item in q.respuesta)) throw new Error(`Falta relación para '${item}' en la pregunta ${n}.`);
+            if (!q.opciones.includes(q.respuesta[item])) throw new Error(`La relación de '${item}' en la pregunta ${n} no está dentro de las opciones.`);
+          });
+        }
+
+        if (q.tipo === "order") {
+          validateOptionsArray(q, n);
+          if (!Array.isArray(q.respuesta)) throw new Error(`La respuesta de la pregunta ${n} debe ser un array ordenado.`);
+          if (!sameUnorderedArray(q.opciones, q.respuesta)) throw new Error(`La respuesta de la pregunta ${n} debe contener las mismas opciones que 'opciones'.`);
         }
       });
     }
 
+    function validateOptionsArray(q, n) {
+      if (!Array.isArray(q.opciones) || q.opciones.length < 2) {
+        throw new Error(`La pregunta ${n} debe tener al menos dos opciones.`);
+      }
+    }
+
+    function isPlainObject(value) {
+      return value && typeof value === "object" && !Array.isArray(value);
+    }
+
     function normalizeAnswer(value) {
-      return value === "Si" ? "Sí" : value;
+      if (value === null || value === undefined) return "";
+      return String(value).trim();
+    }
+
+    function normalizeYesNo(value) {
+      const normalized = normalizeAnswer(value).toLowerCase();
+      if (["sí", "si", "yes", "y", "true"].includes(normalized)) return "Sí";
+      if (["no", "n", "false"].includes(normalized)) return "No";
+      return normalizeAnswer(value);
+    }
+
+    function normalizeForCompare(value, yesNo = false) {
+      return yesNo ? normalizeYesNo(value) : normalizeAnswer(value);
     }
 
     function getVisibleIndexes() {
       return filteredIndexes || order;
-    }
-
-    function getQuestionByVisibleIndex(visibleIndex) {
-      const realIndex = getVisibleIndexes()[visibleIndex];
-      return questions[realIndex];
     }
 
     function getQuestionId(realIndex) {
@@ -786,7 +1002,7 @@
 
     function getOptions(question) {
       if (question.tipo === "si_no") return ["Sí", "No"];
-      return question.opciones;
+      return question.opciones || [];
     }
 
     function shuffleArray(array) {
@@ -836,7 +1052,7 @@
 
     function renderProgress() {
       const visibleIndexes = getVisibleIndexes();
-      const answered = visibleIndexes.filter(realIndex => progress[getQuestionId(realIndex)]).length;
+      const answered = visibleIndexes.filter(realIndex => isAnswered(questions[realIndex], progress[getQuestionId(realIndex)])).length;
       const total = visibleIndexes.length;
       const percent = total === 0 ? 0 : Math.round((answered / total) * 100);
 
@@ -856,7 +1072,7 @@
         btn.textContent = visibleIndex + 1;
 
         if (visibleIndex === currentIndex && !resultMode) btn.classList.add("current");
-        if (progress[getQuestionId(realIndex)]) btn.classList.add("answered");
+        if (isAnswered(questions[realIndex], progress[getQuestionId(realIndex)])) btn.classList.add("answered");
 
         if (resultMode) {
           const item = resultByIndex[realIndex];
@@ -881,12 +1097,42 @@
       const question = questions[realIndex];
       const questionId = getQuestionId(realIndex);
       const selected = progress[questionId];
-      const options = getOptions(question);
 
       questionTitle.textContent = `Pregunta ${currentIndex + 1}`;
-      questionTopic.textContent = question.tipo === "si_no" ? "Sí / No" : "Opción múltiple";
+      questionTopic.textContent = getTypeLabel(question.tipo);
       questionText.textContent = question.pregunta;
       optionsContainer.innerHTML = "";
+
+      if (["multiple", "si_no", "fill_blank"].includes(question.tipo)) {
+        renderSingleChoice(question, questionId, selected);
+      } else if (question.tipo === "multi_select") {
+        renderMultiSelect(question, questionId, selected);
+      } else if (question.tipo === "group_yes_no") {
+        renderGroupYesNo(question, questionId, selected);
+      } else if (question.tipo === "match") {
+        renderMatch(question, questionId, selected);
+      } else if (question.tipo === "order") {
+        renderOrder(question, questionId, selected);
+      }
+
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === visibleIndexes.length - 1;
+    }
+
+    function getTypeLabel(type) {
+      return {
+        multiple: "Opción múltiple",
+        si_no: "Sí / No",
+        multi_select: "Varias respuestas correctas",
+        group_yes_no: "Varias afirmaciones Sí/No",
+        match: "Relacionar elementos",
+        order: "Ordenar elementos",
+        fill_blank: "Completar con opción"
+      }[type] || type;
+    }
+
+    function renderSingleChoice(question, questionId, selected) {
+      const options = getOptions(question);
 
       options.forEach((option, optionIndex) => {
         const letter = question.tipo === "si_no" ? (optionIndex === 0 ? "S" : "N") : String.fromCharCode(65 + optionIndex);
@@ -907,9 +1153,221 @@
 
         optionsContainer.appendChild(btn);
       });
+    }
 
-      prevBtn.disabled = currentIndex === 0;
-      nextBtn.disabled = currentIndex === visibleIndexes.length - 1;
+    function renderMultiSelect(question, questionId, selected) {
+      const current = Array.isArray(selected) ? selected : [];
+
+      question.opciones.forEach((option, optionIndex) => {
+        const btn = document.createElement("button");
+        btn.className = "option";
+        if (current.includes(option)) btn.classList.add("selected");
+
+        btn.innerHTML = `
+          <span class="letter">${current.includes(option) ? "✓" : String.fromCharCode(65 + optionIndex)}</span>
+          <span>${escapeHtml(option)}</span>
+        `;
+
+        btn.addEventListener("click", () => {
+          const updated = Array.isArray(progress[questionId]) ? progress[questionId].slice() : [];
+          const existingIndex = updated.indexOf(option);
+
+          if (existingIndex >= 0) updated.splice(existingIndex, 1);
+          else updated.push(option);
+
+          if (updated.length === 0) delete progress[questionId];
+          else progress[questionId] = updated;
+
+          saveProgress();
+          render();
+        });
+
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function renderGroupYesNo(question, questionId, selected) {
+      const current = isPlainObject(selected) ? selected : {};
+      const block = document.createElement("div");
+      block.className = "complex-block";
+
+      question.afirmaciones.forEach(statement => {
+        const row = document.createElement("div");
+        row.className = "complex-row";
+        const answer = current[statement];
+
+        row.innerHTML = `
+          <div class="complex-row-title">${escapeHtml(statement)}</div>
+          <div class="yesno-actions">
+            <button class="mini-btn ${normalizeYesNo(answer) === "Sí" ? "selected" : ""}" data-value="Sí">Sí</button>
+            <button class="mini-btn ${normalizeYesNo(answer) === "No" ? "selected" : ""}" data-value="No">No</button>
+          </div>
+        `;
+
+        row.querySelectorAll("button").forEach(button => {
+          button.addEventListener("click", () => {
+            const updated = isPlainObject(progress[questionId]) ? { ...progress[questionId] } : {};
+            updated[statement] = button.dataset.value;
+            progress[questionId] = updated;
+            saveProgress();
+            render();
+          });
+        });
+
+        block.appendChild(row);
+      });
+
+      optionsContainer.appendChild(block);
+    }
+
+    function renderMatch(question, questionId, selected) {
+      const current = isPlainObject(selected) ? selected : {};
+      const block = document.createElement("div");
+      block.className = "complex-block";
+
+      question.items.forEach(item => {
+        const row = document.createElement("div");
+        row.className = "complex-row select-row";
+
+        const title = document.createElement("div");
+        title.className = "complex-row-title";
+        title.textContent = item;
+
+        const select = document.createElement("select");
+        select.innerHTML = `<option value="">Selecciona una opción</option>` + question.opciones.map(option => {
+          const selectedAttr = current[item] === option ? "selected" : "";
+          return `<option value="${escapeAttribute(option)}" ${selectedAttr}>${escapeHtml(option)}</option>`;
+        }).join("");
+
+        select.addEventListener("change", () => {
+          const updated = isPlainObject(progress[questionId]) ? { ...progress[questionId] } : {};
+          if (select.value) updated[item] = select.value;
+          else delete updated[item];
+
+          if (Object.keys(updated).length === 0) delete progress[questionId];
+          else progress[questionId] = updated;
+
+          saveProgress();
+          render();
+        });
+
+        row.appendChild(title);
+        row.appendChild(select);
+        block.appendChild(row);
+      });
+
+      optionsContainer.appendChild(block);
+    }
+
+    function renderOrder(question, questionId, selected) {
+      const current = Array.isArray(selected) ? selected : [];
+      const block = document.createElement("div");
+      block.className = "complex-block";
+
+      question.opciones.forEach((_, position) => {
+        const row = document.createElement("div");
+        row.className = "complex-row select-row";
+
+        const title = document.createElement("div");
+        title.className = "complex-row-title";
+        title.textContent = `Posición ${position + 1}`;
+
+        const select = document.createElement("select");
+        select.innerHTML = `<option value="">Selecciona una opción</option>` + question.opciones.map(option => {
+          const selectedAttr = current[position] === option ? "selected" : "";
+          return `<option value="${escapeAttribute(option)}" ${selectedAttr}>${escapeHtml(option)}</option>`;
+        }).join("");
+
+        select.addEventListener("change", () => {
+          const updated = Array.isArray(progress[questionId]) ? progress[questionId].slice() : [];
+          updated[position] = select.value;
+
+          const hasAnyValue = updated.some(value => value);
+          if (!hasAnyValue) delete progress[questionId];
+          else progress[questionId] = updated;
+
+          saveProgress();
+          render();
+        });
+
+        row.appendChild(title);
+        row.appendChild(select);
+        block.appendChild(row);
+      });
+
+      optionsContainer.appendChild(block);
+    }
+
+    function isAnswered(question, answer) {
+      if (answer === null || answer === undefined) return false;
+
+      if (["multiple", "si_no", "fill_blank"].includes(question.tipo)) {
+        return normalizeAnswer(answer) !== "";
+      }
+
+      if (["multi_select", "order"].includes(question.tipo)) {
+        return Array.isArray(answer) && answer.some(value => normalizeAnswer(value) !== "");
+      }
+
+      if (["match", "group_yes_no"].includes(question.tipo)) {
+        return isPlainObject(answer) && Object.values(answer).some(value => normalizeAnswer(value) !== "");
+      }
+
+      return false;
+    }
+
+    function isAnswerCorrect(question, answer) {
+      if (!isAnswered(question, answer)) return false;
+
+      if (["multiple", "fill_blank"].includes(question.tipo)) {
+        return normalizeAnswer(answer) === normalizeAnswer(question.respuesta);
+      }
+
+      if (question.tipo === "si_no") {
+        return normalizeYesNo(answer) === normalizeYesNo(question.respuesta);
+      }
+
+      if (question.tipo === "multi_select") {
+        return sameUnorderedArray(answer, question.respuesta);
+      }
+
+      if (question.tipo === "order") {
+        return sameOrderedArray(answer, question.respuesta);
+      }
+
+      if (question.tipo === "match") {
+        return sameObjectByExpectedKeys(answer, question.respuesta, false);
+      }
+
+      if (question.tipo === "group_yes_no") {
+        return sameObjectByExpectedKeys(answer, question.respuesta, true);
+      }
+
+      return false;
+    }
+
+    function sameUnorderedArray(a, b) {
+      if (!Array.isArray(a) || !Array.isArray(b)) return false;
+      if (a.length !== b.length) return false;
+      const sortedA = a.map(value => normalizeAnswer(value)).sort();
+      const sortedB = b.map(value => normalizeAnswer(value)).sort();
+      return JSON.stringify(sortedA) === JSON.stringify(sortedB);
+    }
+
+    function sameOrderedArray(a, b) {
+      if (!Array.isArray(a) || !Array.isArray(b)) return false;
+      if (a.length !== b.length) return false;
+      return a.every((value, index) => normalizeAnswer(value) === normalizeAnswer(b[index]));
+    }
+
+    function sameObjectByExpectedKeys(answer, expected, yesNo) {
+      if (!isPlainObject(answer) || !isPlainObject(expected)) return false;
+      const expectedKeys = Object.keys(expected);
+      return expectedKeys.every(key => {
+        const answerValue = normalizeForCompare(answer[key], yesNo);
+        const expectedValue = normalizeForCompare(expected[key], yesNo);
+        return answerValue === expectedValue;
+      });
     }
 
     function calculateResult() {
@@ -921,15 +1379,14 @@
       const details = visibleIndexes.map((realIndex, visibleIndex) => {
         const q = questions[realIndex];
         const questionId = getQuestionId(realIndex);
-        const answer = progress[questionId] || null;
-        const correctAnswer = normalizeAnswer(q.respuesta);
+        const answer = progress[questionId] ?? null;
 
-        if (!answer) {
+        if (!isAnswered(q, answer)) {
           blank++;
           return { realIndex, visibleIndex, question: q, answer, status: "blank" };
         }
 
-        if (normalizeAnswer(answer) === correctAnswer) {
+        if (isAnswerCorrect(q, answer)) {
           correct++;
           return { realIndex, visibleIndex, question: q, answer, status: "correct" };
         }
@@ -968,13 +1425,30 @@
         div.innerHTML = `
           <strong>Pregunta ${item.visibleIndex + 1} · ${statusLabel}</strong>
           <p>${escapeHtml(item.question.pregunta)}</p>
-          <p><strong>Tu respuesta:</strong> ${item.answer ? escapeHtml(item.answer) : "—"}</p>
-          <p><strong>Respuesta correcta:</strong> ${escapeHtml(normalizeAnswer(item.question.respuesta))}</p>
+          <p><strong>Tu respuesta:</strong> ${formatAnswerHtml(item.answer)}</p>
+          <p><strong>Respuesta correcta:</strong> ${formatAnswerHtml(item.question.respuesta, item.question.tipo === "group_yes_no")}</p>
           ${item.question.explicacion ? `<p><strong>Explicación:</strong> ${escapeHtml(item.question.explicacion)}</p>` : ""}
         `;
 
         reviewList.appendChild(div);
       });
+    }
+
+    function formatAnswerHtml(value, yesNo = false) {
+      if (value === null || value === undefined || value === "") return "—";
+
+      if (Array.isArray(value)) {
+        if (value.length === 0 || value.every(item => !item)) return "—";
+        return `<ol class="answer-list">${value.filter(Boolean).map(item => `<li>${escapeHtml(item)}</li>`).join("")}</ol>`;
+      }
+
+      if (isPlainObject(value)) {
+        const entries = Object.entries(value);
+        if (entries.length === 0) return "—";
+        return `<ul class="answer-list">${entries.map(([key, val]) => `<li><strong>${escapeHtml(key)}:</strong> ${escapeHtml(yesNo ? normalizeYesNo(val) : val)}</li>`).join("")}</ul>`;
+      }
+
+      return escapeHtml(yesNo ? normalizeYesNo(value) : value);
     }
 
     function showQuiz() {
@@ -1006,13 +1480,17 @@
         .replaceAll("'", "&#039;");
     }
 
+    function escapeAttribute(value) {
+      return escapeHtml(value).replaceAll("`", "&#096;");
+    }
+
     fileInput.addEventListener("change", async event => {
       const file = event.target.files[0];
       if (!file) return;
 
       try {
         const text = await file.text();
-        const parsed = JSON.parse(text);
+        const parsed = unwrapQuestions(JSON.parse(text));
         validateQuestions(parsed);
         questions = parsed;
         progress = {};
@@ -1034,11 +1512,12 @@
     startBtn.addEventListener("click", startQuiz);
 
     downloadSampleBtn.addEventListener("click", () => {
-      const blob = new Blob([JSON.stringify(sampleQuestions, null, 2)], { type: "application/json" });
+      const bankToDownload = questions.length ? questions : sampleQuestions;
+      const blob = new Blob([JSON.stringify(bankToDownload, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "preguntas_ejemplo.json";
+      a.download = "banco_preguntas_actual.json";
       a.click();
       URL.revokeObjectURL(url);
     });
@@ -1108,7 +1587,7 @@
 
     saveJsonBtn.addEventListener("click", () => {
       try {
-        const parsed = JSON.parse(jsonEditor.value);
+        const parsed = unwrapQuestions(JSON.parse(jsonEditor.value));
         validateQuestions(parsed);
         questions = parsed;
         progress = {};
@@ -1126,18 +1605,23 @@
       }
     });
 
-    restoreSampleBtn.addEventListener("click", () => {
-      if (!confirm("¿Restaurar el ejemplo inicial? Esto sustituirá el banco actual.")) return;
-      questions = structuredClone(sampleQuestions);
+    restoreSampleBtn.addEventListener("click", async () => {
+      if (!confirm("¿Recargar el banco AZ-900 por defecto? Esto sustituirá el banco actual guardado en este navegador.")) return;
+
+      try {
+        questions = await loadDefaultQuestions(true);
+      } catch (error) {
+        alert(`No se pudo cargar el JSON por defecto: ${error.message}`);
+        return;
+      }
+
       progress = {};
       order = questions.map((_, index) => index);
       currentIndex = 0;
       filteredIndexes = null;
       resultMode = false;
-      saveQuestions();
       saveProgress();
       jsonEditor.value = JSON.stringify(questions, null, 2);
-      setStatus("Ejemplo restaurado correctamente.", "ok");
       showQuiz();
       render();
     });
@@ -1164,8 +1648,18 @@
       }
     });
 
-    jsonEditor.value = JSON.stringify(questions, null, 2);
-    render();
+    initApp();
+
+    async function initApp() {
+      questions = await loadInitialQuestions();
+      order = questions.map((_, index) => index);
+      currentIndex = 0;
+      filteredIndexes = null;
+      resultMode = false;
+      jsonEditor.value = JSON.stringify(questions, null, 2);
+      showQuiz();
+      render();
+    }
   </script>
 </body>
 
